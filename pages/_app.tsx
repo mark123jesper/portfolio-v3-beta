@@ -39,20 +39,52 @@ export default function App({ Component, pageProps }: AppProps) {
                           <motion.div key={pathname}>
                               <Component {...pageProps} />
                               <motion.div
-                                  className="fixed z-[50] top-0 left-0 w-full h-screen bg-shade-4 dark:bg-shade-6 origin-left"
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen dark:bg-shade-2 bg-shade-6 origin-left"
                                   initial={{ scaleX: 0}}
                                   animate={{scaleX: 0}}
                                   exit={{scaleX: 1}}
                                   transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                                   key="enter-1"
                               ></motion.div>
+                              <motion.div
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen dark:bg-shade-3 bg-shade-7 origin-left"
+                                  initial={{ scaleX: 0}}
+                                  animate={{scaleX: 0}}
+                                  exit={{scaleX: 1}}
+                                  transition={{ duration: 1, ease: [0.44, 1, 0.36, 1] }}
+                                  key="enter-1"
+                              ></motion.div>
+                              <motion.div
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen dark:bg-shade-4 bg-shade-8 origin-left"
+                                  initial={{ scaleX: 0}}
+                                  animate={{scaleX: 0}}
+                                  exit={{scaleX: 1}}
+                                  transition={{ duration: 1, ease: [0.66, 1, 0.36, 1] }}
+                                  key="enter-1"
+                              ></motion.div>
 
                               <motion.div
-                                  className="fixed z-[50] top-0 left-0 w-full h-screen bg-shade-4 dark:bg-shade-6 origin-left"
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen bg-shade-6 dark:bg-shade-2 origin-left"
                                   initial={{ scaleX: 1}}
                                   animate={{scaleX: 0}}
                                   exit={{scaleX: 0}}
-                                  transition={{ duration: 1, ease: [0.66, 1, 0.36, 0.22] }}
+                                  transition={{ duration: 1, ease: [0.66, 1, 0.36, 1] }}
+                                  key="exit-1"
+                              ></motion.div>
+                              <motion.div
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen bg-shade-7 dark:bg-shade-3 origin-left"
+                                  initial={{ scaleX: 1}}
+                                  animate={{scaleX: 0}}
+                                  exit={{scaleX: 0}}
+                                  transition={{ duration: 1, ease: [0.44, 1, 0.36, 1] }}
+                                  key="exit-1"
+                              ></motion.div>
+                              <motion.div
+                                  className="fixed z-[50] top-0 left-0 w-full h-screen bg-shade-8 dark:bg-shade-4 origin-left"
+                                  initial={{ scaleX: 1}}
+                                  animate={{scaleX: 0}}
+                                  exit={{scaleX: 0}}
+                                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                                   key="exit-1"
                               ></motion.div>
                           </motion.div>
