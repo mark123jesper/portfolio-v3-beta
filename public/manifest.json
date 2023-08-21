@@ -1,0 +1,27 @@
+{
+  "short_name": "White Cat Dev",
+  "name": "White Cat Dev",
+  "icons": [
+    {
+      "src": "M_maskable.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "M_maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "M_maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#262320",
+  "background_color": "#262320"
+}
