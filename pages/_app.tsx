@@ -1,10 +1,15 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import dynamic from "next/dynamic";
-import {AnimatePresence, motion} from "framer-motion";
 import {Rubik} from "next/font/google";
 import {usePathname} from "next/navigation";
 import {ThemeProvider} from "next-themes";
+
+import {AnimatePresence, motion} from "framer-motion";
+
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import ScrollToTop from "@/components/ScrollToTop";
