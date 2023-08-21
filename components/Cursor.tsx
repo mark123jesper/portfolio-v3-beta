@@ -15,6 +15,7 @@ const Cursor = () => {
 
         const onMouseEnter = (event:any) => {
             const component = event.target;
+            console.log('Entering', component.tagName)
             gsap.to(cursor, {scale:4})
         }
 
@@ -40,7 +41,7 @@ const Cursor = () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
 
     if(!isMobile) {
-        return <span id="custom-cursor" className="fixed top-0 left-0 w-[20px] rounded-[50%] pointer-events-none z-[9999] mix-blend-difference dark:mix-blend-difference p-[10px] bg-black dark:bg-white"/>
+        return <span id="custom-cursor" className="fixed top-0 left-0 w-[20px] rounded-[50%] pointer-events-none z-[9999] mix-blend-difference p-[10px] bg-gradient-to-r from-black to-white"/>
     }
 
     return;
