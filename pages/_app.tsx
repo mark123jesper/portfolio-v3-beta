@@ -46,8 +46,8 @@ export default function App({ Component, pageProps }: AppProps) {
                                   <ThemeSwitcher />
                                   <Component {...pageProps} />
                                   <ScrollToTop/>
-                                  <DynamicBottomNavbar/>
                               </motion.div>
+                              <DynamicBottomNavbar/>
                               <motion.div
                                   className="fixed z-[50] top-0 left-0 w-full h-screen dark:bg-shade-2 bg-shade-6 origin-left"
                                   initial={{ scaleX: 0}}
