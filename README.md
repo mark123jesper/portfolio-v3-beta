@@ -30,6 +30,6 @@ npm run lint    # eslint
 - `components/sections/` — hero, about, work, skills, path, contact
 - `components/` — navigation, footer, cursor, theme toggle, shared UI
 - `public/projects/` — project screenshots (1280×800)
-- `public/profile.jpg` — portrait (880×1100)
+- `public/logo-mark-light.png` / `logo-mark-dark.png` — White Cat Dev mark, one per theme (1100×1100, transparent)
 
 Content edits happen in `lib/site.ts`; no component changes are needed to update copy or add a project.

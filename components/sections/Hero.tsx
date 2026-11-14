@@ -62,13 +62,21 @@ export default function Hero() {
                 aria-hidden
                 className="absolute -inset-3 rounded-[190px_190px_32px_32px] bg-accent/10"
               />
-              <div className="relative overflow-hidden rounded-[170px_170px_24px_24px] border border-line bg-surface">
+              <div className="relative grid aspect-[4/5] place-items-center overflow-hidden rounded-[170px_170px_24px_24px] border border-line bg-surface">
                 <img
-                  src="/profile.jpg"
-                  alt="Mark Jesper Pillerva"
-                  width={880}
+                  src="/logo-mark-light.png"
+                  alt="White Cat Dev logo"
+                  width={1100}
                   height={1100}
-                  className="aspect-[4/5] h-full w-full object-cover"
+                  className="w-[76%] dark:hidden"
+                />
+                <img
+                  src="/logo-mark-dark.png"
+                  alt=""
+                  aria-hidden
+                  width={1100}
+                  height={1100}
+                  className="hidden w-[76%] dark:block"
                 />
               </div>
               <div className="relative -mt-9 mx-4 rounded-2xl border border-line bg-paper px-5 py-4 shadow-[0_24px_50px_-36px_rgba(0,0,0,0.55)] md:mx-6">
