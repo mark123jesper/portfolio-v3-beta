@@ -51,10 +51,27 @@ export default function Nav() {
         }`}
       >
         <nav className="shell flex h-16 items-center justify-between gap-4" aria-label="Main">
-          <a href="#top" className="group flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-full border border-line font-display text-[15px] leading-none text-ink transition-colors group-hover:border-accent group-hover:text-accent">
-              M
-            </span>
+          <a
+            href="#top"
+            aria-label={`${site.name} — back to top`}
+            className="group flex items-center gap-3"
+          >
+            <img
+              src="/logo-mark-light.png"
+              alt=""
+              aria-hidden
+              width={1100}
+              height={1100}
+              className="h-10 w-10 opacity-80 transition-opacity duration-300 group-hover:opacity-100 dark:hidden"
+            />
+            <img
+              src="/logo-mark-dark.png"
+              alt=""
+              aria-hidden
+              width={1100}
+              height={1100}
+              className="hidden h-10 w-10 opacity-80 transition-opacity duration-300 group-hover:opacity-100 dark:block"
+            />
             <span className="hidden flex-col leading-none sm:flex">
               <span className="text-[13px] font-medium text-ink">{site.name}</span>
               <span className="mt-1 text-[10px] uppercase tracking-label text-muted">{site.brand}</span>
