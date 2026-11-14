@@ -1,27 +1,21 @@
 {
   "short_name": "White Cat Dev",
-  "name": "White Cat Dev",
+  "name": "Mark Jesper Pillerva — White Cat Dev",
   "icons": [
     {
-      "src": "M_maskable.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "M_maskable.png",
-      "type": "image/png",
+      "src": "android-chrome-192x192.png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "M_maskable.png",
-      "type": "image/png",
       "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#262320",
-  "background_color": "#262320"
+  "theme_color": "#FBF6EF",
+  "background_color": "#FBF6EF"
 }

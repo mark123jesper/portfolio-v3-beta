@@ -1,50 +1,62 @@
-import {useEffect} from "react";
-import {gsap} from "gsap";
+'use client'
 
-const Cursor = () => {
-    useEffect(() => {
-        const cursor = document.getElementById("custom-cursor");
-        const links = document.querySelectorAll('a');
-        const buttons = document.querySelectorAll('button');
-        const spans = document.querySelectorAll('span');
+import { useEffect, useRef } from 'react'
 
-        const onMouseMove = (event:any) => {
-            const {clientX, clientY} = event;
-            gsap.to(cursor, {x: clientX, y: clientY})
-        }
+export default function Cursor() {
+  const dotRef = useRef<HTMLDivElement>(null)
+  const ringRef = useRef<HTMLDivElement>(null)
 
-        const onMouseEnter = (event:any) => {
-            const component = event.target;
-            console.log('Entering', component.tagName)
-            gsap.to(cursor, {scale:4})
-        }
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches) return
 
-        const onMouseLeave = (event:any) => {
-            gsap.to(cursor, {scale:1})
-        }
+    const dot = dotRef.current
+    const ring = ringRef.current
+    if (!dot || !ring) return
 
-        document.addEventListener('mousemove', onMouseMove);
-        links.forEach(link => {
-            link.addEventListener('mouseenter', onMouseEnter);
-            link.addEventListener('mouseleave', onMouseLeave);
-        })
-        buttons.forEach(link => {
-            link.addEventListener('mouseenter', onMouseEnter);
-            link.addEventListener('mouseleave', onMouseLeave);
-        })
-        spans.forEach(link => {
-            link.addEventListener('mouseenter', onMouseEnter);
-            link.addEventListener('mouseleave', onMouseLeave);
-        })
-    }, [])
+    const root = document.documentElement
+    root.classList.add('custom-cursor')
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+    let pointerX = window.innerWidth / 2
+    let pointerY = window.innerHeight / 2
+    let ringX = pointerX
+    let ringY = pointerY
+    let hovering = false
+    let frame = 0
 
-    if(!isMobile) {
-        return <span id="custom-cursor" className="fixed top-0 left-0 w-[20px] rounded-[50%] pointer-events-none z-[9999] mix-blend-difference p-[10px] bg-white"/>
+    const onMove = (event: MouseEvent) => {
+      pointerX = event.clientX
+      pointerY = event.clientY
+      dot.style.transform = `translate3d(${pointerX}px, ${pointerY}px, 0) translate(-50%, -50%)`
+
+      const target = event.target as HTMLElement | null
+      const isInteractive = Boolean(target?.closest('a, button, [data-cursor="hover"]'))
+      if (isInteractive !== hovering) {
+        hovering = isInteractive
+        ring.dataset.hover = String(hovering)
+      }
     }
 
-    return;
-};
+    const tick = () => {
+      ringX += (pointerX - ringX) * 0.16
+      ringY += (pointerY - ringY) * 0.16
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`
+      frame = requestAnimationFrame(tick)
+    }
 
-export default Cursor;
+    window.addEventListener('mousemove', onMove, { passive: true })
+    frame = requestAnimationFrame(tick)
+
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      cancelAnimationFrame(frame)
+      root.classList.remove('custom-cursor')
+    }
+  }, [])
+
+  return (
+    <div aria-hidden className="hidden md:block">
+      <div ref={ringRef} className="cursor-ring h-9 w-9 rounded-full border border-ink/40" />
+      <div ref={dotRef} className="cursor-dot h-[5px] w-[5px] rounded-full bg-accent" />
+    </div>
+  )
+}
