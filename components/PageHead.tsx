@@ -33,6 +33,11 @@ const PageHead = () => {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
+      <meta property="og:image" content={`${site.url}/og-square.png`} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="1200" />
+      <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
       <meta property="og:locale" content="en_CA" />
 
       <meta name="twitter:card" content="summary_large_image" />
