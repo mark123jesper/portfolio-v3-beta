@@ -28,14 +28,19 @@ const PageHead = () => {
       <meta property="og:title" content={`${site.name} — ${site.role}`} />
       <meta property="og:description" content={site.description} />
       <meta property="og:url" content={`${site.url}/`} />
-      <meta property="og:image" content={`${site.url}/android-chrome-512x512.png`} />
+      <meta property="og:image" content={`${site.url}/og.png`} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
       <meta property="og:locale" content="en_CA" />
 
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:creator" content="@shironekomaru69" />
       <meta name="twitter:title" content={`${site.name} — ${site.role}`} />
       <meta name="twitter:description" content={site.description} />
-      <meta name="twitter:image" content={`${site.url}/android-chrome-512x512.png`} />
+      <meta name="twitter:image" content={`${site.url}/og.png`} />
+      <meta name="twitter:image:alt" content={`${site.name} — ${site.role}`} />
 
       <title>{`${site.name} — ${site.role}`}</title>
     </Head>
