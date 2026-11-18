@@ -1,8 +1,13 @@
 import Link from 'next/link'
 
+import PageHead from '@/components/PageHead'
+import { site } from '@/lib/site'
+
 export default function ServerError() {
   return (
-    <main className="shell flex min-h-screen flex-col justify-center py-24">
+    <>
+      <PageHead title={`Something broke — ${site.name}`} path="/500" />
+      <main className="shell flex min-h-screen flex-col justify-center py-24">
       <p className="label text-accent">Error 500</p>
       <h1 className="mt-5 max-w-xl font-display text-[clamp(2.4rem,6vw,4rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink">
         Something broke on my end.
@@ -18,6 +23,7 @@ export default function ServerError() {
           Back home
         </Link>
       </div>
-    </main>
+      </main>
+    </>
   )
 }

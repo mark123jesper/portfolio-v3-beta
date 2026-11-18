@@ -4,7 +4,6 @@ import { Fraunces, Rubik } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 
 import '@/styles/globals.css'
-import PageHead from '@/components/PageHead'
 
 const Cursor = dynamic(() => import('@/components/Cursor'), { ssr: false })
 
@@ -20,7 +19,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
       <div className={`${body.variable} ${display.variable} font-sans`}>
-        <PageHead />
         <Cursor />
         <Component {...pageProps} />
       </div>

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { clientWork, featuredProjects, moreProjects } from '@/lib/site'
 
@@ -41,7 +43,15 @@ export default function Work() {
                 </a>
 
                 <div className="mt-5 flex items-start justify-between gap-6">
-                  <h3 className="font-display text-2xl leading-tight text-ink">{project.title}</h3>
+                  <h3 className="font-display text-2xl leading-tight text-ink">
+                    {project.caseStudy ? (
+                      <Link href={project.caseStudy} className="link-underline hover:text-accent">
+                        {project.title}
+                      </Link>
+                    ) : (
+                      project.title
+                    )}
+                  </h3>
                   <span className="label mt-1 shrink-0 text-muted">{project.year}</span>
                 </div>
                 <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">{project.description}</p>
@@ -53,6 +63,15 @@ export default function Work() {
                 </div>
 
                 <div className="mt-4 flex items-center gap-5">
+                  {project.caseStudy && (
+                    <Link
+                      href={project.caseStudy}
+                      className="label link-underline inline-flex items-center gap-1.5 text-ink hover:text-accent"
+                    >
+                      Case study
+                      <ArrowUpRight className="h-3 w-3" />
+                    </Link>
+                  )}
                   {project.live && (
                     <a
                       href={project.live}

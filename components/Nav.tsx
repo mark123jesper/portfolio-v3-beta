@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
 import ThemeToggle from '@/components/ThemeToggle'
 import { site } from '@/lib/site'
@@ -14,6 +15,9 @@ const sections = [
 ]
 
 export default function Nav() {
+  const { pathname } = useRouter()
+  const onHome = pathname === '/'
+  const prefix = onHome ? '' : '/'
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('')
@@ -52,7 +56,7 @@ export default function Nav() {
       >
         <nav className="shell flex h-16 items-center justify-between gap-4" aria-label="Main">
           <a
-            href="#top"
+            href={onHome ? '#top' : '/'}
             aria-label={`${site.name} — back to top`}
             className="group flex items-center gap-3"
           >
@@ -82,7 +86,7 @@ export default function Nav() {
             {sections.map((section) => (
               <a
                 key={section.id}
-                href={`#${section.id}`}
+                href={`${prefix}#${section.id}`}
                 className={`label link-underline py-1 transition-colors ${
                   active === section.id ? 'text-accent' : 'text-muted hover:text-ink'
                 }`}
@@ -126,7 +130,7 @@ export default function Nav() {
               {sections.map((section, index) => (
                 <a
                   key={section.id}
-                  href={`#${section.id}`}
+                  href={`${prefix}#${section.id}`}
                   onClick={() => setOpen(false)}
                   className="flex items-baseline justify-between border-b border-line py-5"
                 >

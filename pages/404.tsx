@@ -1,8 +1,13 @@
 import Link from 'next/link'
 
+import PageHead from '@/components/PageHead'
+import { site } from '@/lib/site'
+
 export default function NotFound() {
   return (
-    <main className="shell flex min-h-screen flex-col justify-center py-24">
+    <>
+      <PageHead title={`Page not found — ${site.name}`} path="/404" />
+      <main className="shell flex min-h-screen flex-col justify-center py-24">
       <p className="label text-accent">Error 404</p>
       <h1 className="mt-5 max-w-xl font-display text-[clamp(2.4rem,6vw,4rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink">
         This page wandered off.
@@ -18,6 +23,7 @@ export default function NotFound() {
           Back home
         </Link>
       </div>
-    </main>
+      </main>
+    </>
   )
 }

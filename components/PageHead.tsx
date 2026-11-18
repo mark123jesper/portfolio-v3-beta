@@ -1,12 +1,27 @@
 import Head from 'next/head'
 import { site } from '@/lib/site'
 
-const PageHead = () => {
+type Props = {
+  title?: string
+  description?: string
+  path?: string
+  image?: string
+  imageAlt?: string
+  type?: 'website' | 'article'
+}
+
+const PageHead = ({ title, description, path = '/', image, imageAlt, type = 'website' }: Props) => {
+  const pageTitle = title ?? `${site.name} — ${site.role}`
+  const pageDescription = description ?? site.description
+  const pageUrl = `${site.url}${path}`
+  const wideImage = image ?? `${site.url}/og.png`
+  const wideAlt = imageAlt ?? `${site.name} — ${site.role}`
+
   return (
     <Head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="description" content={site.description} />
+      <meta name="description" content={pageDescription} />
       <meta name="author" content={site.name} />
       <meta
         name="keywords"
@@ -21,33 +36,42 @@ const PageHead = () => {
       <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       <link rel="manifest" href="/manifest.json" />
-      <link rel="canonical" href={`${site.url}/`} />
+      <link rel="canonical" href={pageUrl} />
 
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={type} />
       <meta property="og:site_name" content={`${site.name} — ${site.brand}`} />
-      <meta property="og:title" content={`${site.name} — ${site.role}`} />
-      <meta property="og:description" content={site.description} />
-      <meta property="og:url" content={`${site.url}/`} />
-      <meta property="og:image" content={`${site.url}/og.png`} />
-      <meta property="og:image:type" content="image/png" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
-      <meta property="og:image" content={`${site.url}/og-square.png`} />
-      <meta property="og:image:type" content="image/png" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="1200" />
-      <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
+      <meta property="og:title" content={pageTitle} />
+      <meta property="og:description" content={pageDescription} />
+      <meta property="og:url" content={pageUrl} />
+      <meta property="og:image" content={wideImage} />
+      <meta property="og:image:alt" content={wideAlt} />
+      {image ? (
+        <>
+          <meta property="og:image:width" content="1280" />
+          <meta property="og:image:height" content="800" />
+        </>
+      ) : (
+        <>
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image" content={`${site.url}/og-square.png`} />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="1200" />
+          <meta property="og:image:alt" content={wideAlt} />
+        </>
+      )}
       <meta property="og:locale" content="en_CA" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:creator" content="@shironekomaru69" />
-      <meta name="twitter:title" content={`${site.name} — ${site.role}`} />
-      <meta name="twitter:description" content={site.description} />
-      <meta name="twitter:image" content={`${site.url}/og.png`} />
-      <meta name="twitter:image:alt" content={`${site.name} — ${site.role}`} />
+      <meta name="twitter:title" content={pageTitle} />
+      <meta name="twitter:description" content={pageDescription} />
+      <meta name="twitter:image" content={wideImage} />
+      <meta name="twitter:image:alt" content={wideAlt} />
 
-      <title>{`${site.name} — ${site.role}`}</title>
+      <title>{pageTitle}</title>
     </Head>
   )
 }

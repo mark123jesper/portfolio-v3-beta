@@ -73,7 +73,18 @@ export const skillGroups = [
   },
 ]
 
-export const featuredProjects = [
+export type Project = {
+  title: string
+  year: string
+  description: string
+  tags: string[]
+  image: string
+  live?: string
+  source?: string
+  caseStudy?: string
+}
+
+export const featuredProjects: Project[] = [
   {
     title: 'Everly Wedding Planner',
     year: '2026',
@@ -83,6 +94,7 @@ export const featuredProjects = [
     image: '/projects/everly.jpg',
     live: 'https://everly-wedding-planner.vercel.app',
     source: 'https://github.com/mark123jesper/everly-wedding-planner',
+    caseStudy: '/work/everly-wedding-planner',
   },
   {
     title: 'Safety, Sparkle & Green',
@@ -92,6 +104,7 @@ export const featuredProjects = [
     tags: ['Next.js', 'TypeScript', 'MongoDB', 'Tailwind CSS'],
     image: '/projects/safety-sparkle.jpg',
     live: 'https://www.ssghouseservices.ca',
+    caseStudy: '/work/safety-sparkle',
   },
   {
     title: 'Escuela de Sto. Rosario',

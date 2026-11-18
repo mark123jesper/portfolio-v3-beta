@@ -1,3 +1,4 @@
+import PageHead from '@/components/PageHead'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Hero from '@/components/sections/Hero'
@@ -11,6 +12,7 @@ import Contact from '@/components/sections/Contact'
 export default function Home() {
   return (
     <>
+      <PageHead />
       <a
         href="#about"
         className="sr-only rounded-full bg-ink px-5 py-3 text-sm text-paper focus:not-sr-only focus:fixed focus:left-6 focus:top-4 focus:z-50"
