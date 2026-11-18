@@ -21,12 +21,20 @@ export default function Cursor() {
     let ringX = pointerX
     let ringY = pointerY
     let hovering = false
+    let revealed = false
     let frame = 0
 
     const onMove = (event: MouseEvent) => {
       pointerX = event.clientX
       pointerY = event.clientY
       dot.style.transform = `translate3d(${pointerX}px, ${pointerY}px, 0) translate(-50%, -50%)`
+
+      if (!revealed) {
+        revealed = true
+        ringX = pointerX
+        ringY = pointerY
+        root.classList.add('cursor-ready')
+      }
 
       const target = event.target as HTMLElement | null
       const isInteractive = Boolean(target?.closest('a, button, [data-cursor="hover"]'))
@@ -49,7 +57,7 @@ export default function Cursor() {
     return () => {
       window.removeEventListener('mousemove', onMove)
       cancelAnimationFrame(frame)
-      root.classList.remove('custom-cursor')
+      root.classList.remove('custom-cursor', 'cursor-ready')
     }
   }, [])
 

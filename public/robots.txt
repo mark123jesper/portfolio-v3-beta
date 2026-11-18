@@ -1,6 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
+Allow: /
 Disallow:
 
 User-agent: GPTBot
 Disallow: /
+
+Sitemap: https://whitecatdev.vercel.app/sitemap.xml

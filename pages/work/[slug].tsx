@@ -5,7 +5,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import PageHead from '@/components/PageHead'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
-import { caseStudies, type CaseStudy } from '@/lib/case-studies'
+import { caseStudies, getCaseStudy, type CaseStudy } from '@/lib/case-studies'
 import { site } from '@/lib/site'
 
 type Props = {
@@ -192,7 +192,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const slug = String(params?.slug)
-  const study = caseStudies.find((item) => item.slug === slug)
+  const study = getCaseStudy(slug)
 
   if (!study) return { notFound: true }
 

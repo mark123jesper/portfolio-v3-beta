@@ -18,7 +18,7 @@ export const socials = [
 
 export const stats = [
   { value: '2 yrs', label: 'in software' },
-  { value: '12+', label: 'projects shipped' },
+  { value: '19', label: 'projects shipped' },
   { value: '5', label: 'roles so far' },
 ]
 

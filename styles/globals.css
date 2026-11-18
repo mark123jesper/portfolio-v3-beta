@@ -95,7 +95,14 @@
   left: 0;
   z-index: 9999;
   pointer-events: none;
+  opacity: 0;
   will-change: transform;
+}
+
+/* stay hidden until the pointer has actually moved, so the ring never sits over content on load */
+html.cursor-ready .cursor-dot,
+html.cursor-ready .cursor-ring {
+  opacity: 1;
 }
 
 html.custom-cursor,
