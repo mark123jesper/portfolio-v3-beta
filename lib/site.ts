@@ -75,6 +75,25 @@ export const skillGroups = [
 
 export const featuredProjects = [
   {
+    title: 'Everly Wedding Planner',
+    year: '2026',
+    description:
+      'A free, no-signup wedding dashboard: budget, guest replies, seating, suppliers, checklist, wedding-day run sheet and an assistant that reads the numbers.',
+    tags: ['Next.js', 'TypeScript', 'MongoDB', 'Tailwind CSS'],
+    image: '/projects/everly.jpg',
+    live: 'https://everly-wedding-planner.vercel.app',
+    source: 'https://github.com/mark123jesper/everly-wedding-planner',
+  },
+  {
+    title: 'Safety, Sparkle & Green',
+    year: '2026',
+    description:
+      'A booking site for a Toronto-area home cleaning service: service pages, a two-minute booking flow and email confirmations.',
+    tags: ['Next.js', 'TypeScript', 'MongoDB', 'Tailwind CSS'],
+    image: '/projects/safety-sparkle.jpg',
+    live: 'https://www.ssghouseservices.ca',
+  },
+  {
     title: 'Escuela de Sto. Rosario',
     year: '2022',
     description:

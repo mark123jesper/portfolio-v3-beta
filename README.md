@@ -31,6 +31,6 @@ npm run lint    # eslint
 - `components/` — navigation, footer, cursor, theme toggle, shared UI
 - `public/projects/` — project screenshots (1280×800)
 - `public/logo-mark-light.png` / `logo-mark-dark.png` — White Cat Dev mark, one per theme (1100×1100, transparent)
-- `public/og.png` / `og-square.png` — share cards, 1200×630 and 1200×1200
+- `public/og.png` / `og-square.png` — share cards, 1200×630 and 1200×1200. Rebuild them with `npm run cards` (needs `pip install Pillow`); copy lives in `scripts/make-share-cards.py`
 
 Content edits happen in `lib/site.ts`; no component changes are needed to update copy or add a project.
