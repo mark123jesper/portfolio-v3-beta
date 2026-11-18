@@ -114,6 +114,7 @@ export const featuredProjects: Project[] = [
     tags: ['React', 'JavaScript', 'CSS'],
     image: '/projects/v2.jpg',
     live: 'https://mark123jesper-v2.vercel.app',
+    caseStudy: '/work/white-cat-v2',
   },
   {
     title: 'Escuela de Sto. Rosario',
@@ -124,6 +125,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/escuela.jpg',
     live: 'https://react-school-web-app.vercel.app/',
     source: 'https://github.com/mark123jesper/react-school-web-app',
+    caseStudy: '/work/escuela-de-sto-rosario',
   },
   {
     title: 'Mern Memories',
@@ -134,6 +136,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/memories.jpg',
     live: 'https://mern-mermories.vercel.app/',
     source: 'https://github.com/mark123jesper/mern_mermories',
+    caseStudy: '/work/mern-memories',
   },
   {
     title: 'DigiLife Magazine',
@@ -144,6 +147,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/digilife.jpg',
     live: 'https://mark123jesper.github.io/digi-life-magazine/',
     source: 'https://github.com/mark123jesper/digi-life-magazine',
+    caseStudy: '/work/digilife-magazine',
   },
   {
     title: '(dot)Logix',
@@ -154,6 +158,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/dotlogix.jpg',
     live: 'https://dot-logix.vercel.app/',
     source: 'https://github.com/mark123jesper/dot-logix',
+    caseStudy: '/work/dot-logix',
   },
   {
     title: 'Chainlink',
@@ -163,6 +168,7 @@ export const featuredProjects: Project[] = [
     tags: ['Laravel', 'PHP', 'Vue.js', 'MySQL'],
     image: '/projects/chainlink.jpg',
     source: 'https://github.com/mark123jesper/laravel-blog',
+    caseStudy: '/work/chainlink',
   },
   {
     title: 'React Meetups',
@@ -173,6 +179,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/meetups.jpg',
     live: 'https://react-meetup-rosy.vercel.app/',
     source: 'https://github.com/mark123jesper/react-meetup',
+    caseStudy: '/work/react-meetups',
   },
   {
     title: 'Mark.bit',
@@ -183,6 +190,7 @@ export const featuredProjects: Project[] = [
     image: '/projects/markbit.jpg',
     live: 'https://mark123jesper-beta.vercel.app/',
     source: 'https://github.com/mark123jesper/mark123jesper-v1',
+    caseStudy: '/work/mark-bit',
   },
 ]
 

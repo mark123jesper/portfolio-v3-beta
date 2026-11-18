@@ -5,7 +5,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import PageHead from '@/components/PageHead'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
-import { caseStudies, getCaseStudy, type CaseStudy } from '@/lib/case-studies'
+import { caseStudies, getCaseStudy, getNextCaseStudy, type CaseStudy } from '@/lib/case-studies'
 import { site } from '@/lib/site'
 
 type Props = {
@@ -65,18 +65,22 @@ export default function CaseStudyPage({ study, next }: Props) {
                       <Tag key={item}>{item}</Tag>
                     ))}
                   </dd>
-                  <dt className="label text-muted">Live</dt>
-                  <dd>
-                    <a
-                      href={study.live}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="link-underline inline-flex items-center gap-1.5 text-accent"
-                    >
-                      {study.liveLabel}
-                      <ArrowUpRight className="h-3 w-3" />
-                    </a>
-                  </dd>
+                  {study.live && study.liveLabel && (
+                    <>
+                      <dt className="label text-muted">Live</dt>
+                      <dd>
+                        <a
+                          href={study.live}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="link-underline inline-flex items-center gap-1.5 text-accent"
+                        >
+                          {study.liveLabel}
+                          <ArrowUpRight className="h-3 w-3" />
+                        </a>
+                      </dd>
+                    </>
+                  )}
                   {study.source && (
                     <>
                       <dt className="label text-muted">Source</dt>
@@ -131,27 +135,29 @@ export default function CaseStudyPage({ study, next }: Props) {
             </div>
           </section>
 
-          <section className="shell pb-20 md:pb-28">
-            <Reveal>
-              <SectionLabel index="02">Inside the product</SectionLabel>
-            </Reveal>
+          {study.shots && study.shots.length > 0 && (
+            <section className="shell pb-20 md:pb-28">
+              <Reveal>
+                <SectionLabel index="02">Inside the product</SectionLabel>
+              </Reveal>
 
-            <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-start">
-              {study.shots.map((shot) => (
-                <Reveal key={shot.src}>
-                  <figure>
-                    <img
-                      src={shot.src}
-                      alt={shot.alt}
-                      loading="lazy"
-                      className="w-full rounded-2xl border border-line bg-surface"
-                    />
-                    <figcaption className="mt-4 text-sm leading-relaxed text-muted">{shot.caption}</figcaption>
-                  </figure>
-                </Reveal>
-              ))}
-            </div>
-          </section>
+              <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-start">
+                {study.shots.map((shot) => (
+                  <Reveal key={shot.src}>
+                    <figure>
+                      <img
+                        src={shot.src}
+                        alt={shot.alt}
+                        loading="lazy"
+                        className="w-full rounded-2xl border border-line bg-surface"
+                      />
+                      <figcaption className="mt-4 text-sm leading-relaxed text-muted">{shot.caption}</figcaption>
+                    </figure>
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="border-y border-line bg-surface/50">
             <div className="shell grid gap-6 py-14 md:grid-cols-12 md:items-center">
@@ -196,7 +202,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
   if (!study) return { notFound: true }
 
-  const next = caseStudies.find((item) => item.slug !== slug) ?? study
+  const next = getNextCaseStudy(slug) ?? study
 
   return {
     props: {
