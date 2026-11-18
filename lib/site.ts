@@ -107,6 +107,15 @@ export const featuredProjects: Project[] = [
     caseStudy: '/work/safety-sparkle',
   },
   {
+    title: 'White Cat Developer v2',
+    year: '2023',
+    description:
+      'The second version of this site: a teal, sidebar-led single page built as a React app, with a dark-mode toggle and sections for about, skills and projects.',
+    tags: ['React', 'JavaScript', 'CSS'],
+    image: '/projects/v2.jpg',
+    live: 'https://mark123jesper-v2.vercel.app',
+  },
+  {
     title: 'Escuela de Sto. Rosario',
     year: '2022',
     description:
@@ -165,6 +174,16 @@ export const featuredProjects: Project[] = [
     live: 'https://react-meetup-rosy.vercel.app/',
     source: 'https://github.com/mark123jesper/react-meetup',
   },
+  {
+    title: 'Mark.bit',
+    year: '2021',
+    description:
+      'My first portfolio — a terminal-green single page with Bootstrap scrollspy and jQuery everywhere else.',
+    tags: ['HTML', 'CSS', 'jQuery'],
+    image: '/projects/markbit.jpg',
+    live: 'https://mark123jesper-beta.vercel.app/',
+    source: 'https://github.com/mark123jesper/mark123jesper-v1',
+  },
 ]
 
 export const moreProjects = [
@@ -181,13 +200,6 @@ export const moreProjects = [
     tags: ['HTML', 'Bootstrap', 'JavaScript'],
     live: 'https://healthcare-regform.netlify.app/',
     source: 'https://github.com/mark123jesper/healthcare-registration',
-  },
-  {
-    title: 'Mark.bit',
-    description: 'My first portfolio — Bootstrap scrollspy with plain CSS and jQuery everywhere else.',
-    tags: ['HTML', 'CSS', 'jQuery'],
-    live: 'https://mark123jesper-beta.vercel.app/',
-    source: 'https://github.com/mark123jesper/mark123jesper-v1',
   },
   {
     title: 'React Journals',
