@@ -9,6 +9,8 @@ export type CaseStudy = {
   title: string
   kicker: string
   year: string
+  /** ISO date of the study's last commit — bump it when the study or its images change. */
+  updated: string
   role: string
   summary: string
   stack: string[]
@@ -24,6 +26,7 @@ export type CaseStudy = {
 export const caseStudies: CaseStudy[] = [
   {
     slug: 'food-trip',
+    updated: '2026-11-20',
     title: 'Food Trip',
     kicker: 'Product build',
     year: '2026',
@@ -79,6 +82,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'everly-wedding-planner',
+    updated: '2026-11-18',
     title: 'Everly Wedding Planner',
     kicker: 'Product build',
     year: '2026',
@@ -134,6 +138,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'safety-sparkle',
+    updated: '2026-11-18',
     title: 'Safety, Sparkle & Green',
     kicker: 'Client build',
     year: '2026',
@@ -189,6 +194,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'white-cat-v2',
+    updated: '2026-11-20',
     title: 'White Cat Developer v2',
     kicker: 'Site rebuild',
     year: '2023',
@@ -233,6 +239,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'escuela-de-sto-rosario',
+    updated: '2026-11-20',
     title: 'Escuela de Sto. Rosario',
     kicker: 'School site build',
     year: '2022',
@@ -278,6 +285,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'mern-memories',
+    updated: '2026-11-20',
     title: 'Mern Memories',
     kicker: 'Learning build',
     year: '2022',
@@ -323,6 +331,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'digilife-magazine',
+    updated: '2026-11-20',
     title: 'DigiLife Magazine',
     kicker: 'First KodeGo build',
     year: '2021',
@@ -368,6 +377,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'dot-logix',
+    updated: '2026-11-20',
     title: '(dot)Logix',
     kicker: 'Group build',
     year: '2021',
@@ -413,6 +423,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'chainlink',
+    updated: '2026-11-18',
     title: 'Chainlink',
     kicker: 'First full-stack build',
     year: '2021',
@@ -443,6 +454,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'react-meetups',
+    updated: '2026-11-20',
     title: 'React Meetups',
     kicker: 'Learning build',
     year: '2022',
@@ -488,6 +500,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'mark-bit',
+    updated: '2026-11-20',
     title: 'Mark.bit',
     kicker: 'First portfolio',
     year: '2021',

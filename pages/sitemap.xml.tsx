@@ -3,13 +3,16 @@ import type { GetServerSideProps } from 'next'
 import { caseStudies } from '@/lib/case-studies'
 import { site } from '@/lib/site'
 
-const entry = (path: string, changefreq: string, priority: string) =>
-  `  <url><loc>${site.url}${path}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`
+const entry = (path: string, changefreq: string, priority: string, lastmod: string) =>
+  `  <url><loc>${site.url}${path}</loc><lastmod>${lastmod}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  // The home page carries every card, so it is as fresh as the newest case study.
+  const homeLastmod = caseStudies.reduce((latest, study) => (study.updated > latest ? study.updated : latest), '')
+
   const urls = [
-    entry('/', 'monthly', '1.0'),
-    ...caseStudies.map((study) => entry(`/work/${study.slug}`, 'yearly', '0.7')),
+    entry('/', 'monthly', '1.0', homeLastmod),
+    ...caseStudies.map((study) => entry(`/work/${study.slug}`, 'yearly', '0.7', study.updated)),
   ]
 
   res.setHeader('Content-Type', 'application/xml; charset=utf-8')
