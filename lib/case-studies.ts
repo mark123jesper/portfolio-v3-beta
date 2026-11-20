@@ -23,6 +23,61 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
+    slug: 'food-trip',
+    title: 'Food Trip',
+    kicker: 'Product build',
+    year: '2026',
+    role: 'Design, front-end and back-end',
+    summary:
+      'A weekly meal planner that takes the deciding out of dinner: a week built from your filters, one grocery list sorted by aisle, a cook mode for the phone on the counter, and four ChatGPT features that only ever work from Food Trip’s own recipe library.',
+    stack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'Supabase', 'OpenAI'],
+    live: 'https://food-trip-ai.vercel.app',
+    liveLabel: 'food-trip-ai.vercel.app',
+    sourceNote: 'The repository is private — happy to walk through the code on request.',
+    cover: { src: '/projects/foodtrip.jpg', alt: 'The Food Trip home page' },
+    sections: [
+      {
+        title: 'A week built from filters, not from scratch',
+        body:
+          'A plan is seven days of breakfast, lunch and dinner, but you never fill it slot by slot. Household size, the diets that apply, a cook-time ceiling and the ingredients you refuse to eat are stored once on the preferences page, and the planner assembles a week from the library using only meals that survive those filters. Autofill, per-slot reassignment, clearing a slot and copying last week sit on top of that as small tools rather than as the main event. Leftovers are a first-class answer: marking a meal as leftovers reuses the previous night instead of sending you shopping again.',
+      },
+      {
+        title: 'One list, merged and sorted by aisle',
+        body:
+          'The grocery page is derived, never typed. It walks the whole week, merges the same ingredient across recipes, scales every quantity to the household size and subtracts what the pantry page says is already in the cupboard. Rows are grouped in aisle order — produce, dairy, dry goods — because a list you shop in the order of the shop is a list you finish, and ticks persist so a mid-trip refresh does not lose your place. Metric and imperial are converted at render time from one stored quantity, so switching units never edits the plan.',
+      },
+      {
+        title: 'Four AI features, each with a fence around it',
+        body:
+          'ChatGPT does four jobs behind four routes: build a week from the filters, propose three alternatives for one slot, write a recipe from what is in the pantry, and turn a recipe URL into a library entry. Each prompt carries part of Food Trip’s own catalogue, so the model is choosing from real recipes with real ingredient lists instead of inventing dishes that would not survive the grocery page. The guardrails matter more than the prompts: per-account daily call and token limits, a per-feature quota, a twelve-hour response cache, a fallback model when the first is busy, and honest errors — 503 when the key is missing, 429 when a limit is hit. Without a key every non-AI feature still works.',
+      },
+      {
+        title: 'Cook mode is a screen, not a printout',
+        body:
+          'Cook mode shows one step at a time with the quantities scaled to the table, reads timers out of the step text, keeps the screen awake while you work, lets you tick ingredients off as they go in and moves with the keyboard. A service worker caches the pages you have opened plus a dedicated offline page, and the manifest makes the whole thing installable, which is the difference between a recipe site and something you actually use with wet hands. The recipe page itself is the unit everything else is built from — ingredients, numbered method and an estimated nutrition panel per serving.',
+      },
+      {
+        title: 'Nothing leaves the browser until you sign in',
+        body:
+          'Without an account the plan, the pantry and the templates live in localStorage and are never sent anywhere. Signing in is a Supabase magic link, and plans then sync to your own row under row-level security, which is what the paid tier actually buys. A shared week is encoded into the URL, so a link can be read by anyone without an account. The Sunday email is a cron route guarded by a bearer secret and sent through Resend, and Stripe checkout with a webhook is wired but optional: if billing is not configured the upgrade button says so plainly instead of failing.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/foodtrip-home.jpg',
+        alt: 'The Food Trip home page with the hero heading and recipe cards',
+        caption:
+          'The home page states the one promise the app keeps — a week of dinners planned from your filters — and describes the four AI features next to the plan they feed.',
+      },
+      {
+        src: '/case/foodtrip-recipe.jpg',
+        alt: 'A Food Trip recipe page with ingredients and numbered method',
+        caption:
+          'Every recipe is a real record: ingredients that scale by serving, a numbered method, aisle data and estimated nutrition. Adding it to a week puts each ingredient on the list automatically.',
+      },
+    ],
+  },
+  {
     slug: 'everly-wedding-planner',
     title: 'Everly Wedding Planner',
     kicker: 'Product build',
@@ -161,6 +216,20 @@ export const caseStudies: CaseStudy[] = [
           'This was the first version to call the site White Cat Dev and to put the cat mark on the brand rather than a photo of me. It also carried a fuller CV than v1 — Fligno, the Finpay and Kwikpay era — plus the corporate projects, education and skills. The current site keeps the monogram and the name; the sidebar and the teal did not survive, but the idea of a single page with nowhere to get lost did.',
       },
     ],
+    shots: [
+      {
+        src: '/case/v2-home.jpg',
+        alt: 'The v2 home screen with the fixed teal sidebar',
+        caption:
+          'The rail holds the cat mark and four destinations; the right pane holds one heading, one subtitle and one button. Nothing else competes with the opening screen.',
+      },
+      {
+        src: '/case/v2-projects.jpg',
+        alt: 'The projects list in v2, each card opening a live site',
+        caption:
+          'Projects were part of the same page rather than a route of their own — the work sat beside the about and skills sections, one click from the rail.',
+      },
+    ],
   },
   {
     slug: 'escuela-de-sto-rosario',
@@ -190,6 +259,20 @@ export const caseStudies: CaseStudy[] = [
         title: 'Two kinds of sign-in, one lesson',
         body:
           'The teacher portal goes through Auth0 with a redirect back to /teacher-portal. The student portal is a front-end demo: a form that flips a boolean and shows the student dashboard, with no server check behind it. It was fine for a prototype, but an admin screen that can read every family’s enquiry is exactly the wrong place for a demo login — that is the habit I took into later builds, where the session is checked again on every request.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/escuela-home.jpg',
+        alt: 'The school home page with its announcement carousel',
+        caption:
+          'The public front door: a carousel for enrolment announcements, then the sections parents actually came for — about, preschool, programmes and contact.',
+      },
+      {
+        src: '/case/escuela-about.jpg',
+        alt: 'The About page with the school history and mission',
+        caption:
+          'Inner pages are their own routes rather than scroll targets, so a parent can be sent straight to the admissions information and land in the right place.',
       },
     ],
   },
@@ -223,6 +306,20 @@ export const caseStudies: CaseStudy[] = [
           'The client is split into api, actions, reducers and components, with Redux and redux-thunk handling every fetch, so the feed, the edit form and the like button all read the same store. Material UI cards and a moment-formatted timestamp do the presentation. Half the value of the project was the folder structure: learning where a request belongs before writing it.',
       },
     ],
+    shots: [
+      {
+        src: '/case/memories-auth.jpg',
+        alt: 'The sign-in card with email and Google options',
+        caption:
+          'One auth screen covers both token types: an email and password form for the app’s own JWT, and a Google button that returns an ID token to the same middleware.',
+      },
+      {
+        src: '/case/memories-signup.jpg',
+        alt: 'The sign-up form asking for a name, email and password',
+        caption:
+          'Registration collects the name that appears on every card the person posts. Likes are stored as user ids, so the count is always the length of that list.',
+      },
+    ],
   },
   {
     slug: 'digilife-magazine',
@@ -254,6 +351,20 @@ export const caseStudies: CaseStudy[] = [
           'The site had three authors, so it got three author pages — francis.html, mark.html and jonaadres.html — with a short bio and a portrait. Nobody asked for them. They were the first time I built something because a site felt unfinished without it, which is roughly the instinct the rest of this portfolio runs on.',
       },
     ],
+    shots: [
+      {
+        src: '/case/digilife-business.jpg',
+        alt: 'The business section page with its article grid',
+        caption:
+          'Each section kept its own stylesheet on top of the shared one, so the business page could carry an accent and a card rhythm the sports page did not.',
+      },
+      {
+        src: '/case/digilife-sports.jpg',
+        alt: 'The sports section page',
+        caption:
+          'Six hand-built pages with the same masthead, dropdown and footer — and no build step between editing a file and seeing it in the browser.',
+      },
+    ],
   },
   {
     slug: 'dot-logix',
@@ -283,6 +394,20 @@ export const caseStudies: CaseStudy[] = [
         title: 'The portfolio beside the studio',
         body:
           'A separate portfolio folder went in alongside the agency site — profile, about and contact pages with their own stylesheet and photography — because a design studio that cannot show work is not convincing. There is also a folder of abandoned pages, kept rather than deleted. The site itself is fictional; the practice of building the thing the page claims to be was not.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/dotlogix-home.jpg',
+        alt: 'The (dot)Logix landing screen with its video hero',
+        caption:
+          'The entrance is a full-bleed video slide behind the wordmark, with the “Request a Proposal” control pinned to the bottom-left corner instead of a conventional navbar.',
+      },
+      {
+        src: '/case/dotlogix-menu.jpg',
+        alt: 'The slide-in proposal panel with its project-type checkboxes',
+        caption:
+          'That corner control slides a panel over the page — the enquiry form lives inside the navigation rather than on a separate contact page.',
       },
     ],
   },
@@ -346,6 +471,20 @@ export const caseStudies: CaseStudy[] = [
           'Favourites live in a context: add, remove, check and a total, consumed by the nav badge and the cards. No Redux, no persistence, no accounts — refresh the page and the list is empty again. That was the point of the exercise, and the honest limit of it: a context is a fine place for a list you can afford to lose.',
       },
     ],
+    shots: [
+      {
+        src: '/case/meetups-home.jpg',
+        alt: 'The All Meetups listing with an Add to Favorites button on each card',
+        caption:
+          'The list is fetched from a single Firebase endpoint when the page mounts — no store to invalidate, and a new meetup is on screen after a refresh.',
+      },
+      {
+        src: '/case/meetups-new.jpg',
+        alt: 'The New Meetup form with title, image, address and description fields',
+        caption:
+          'Adding a meetup posts to the same endpoint and navigates back to the list. The favourites count in the nav is the only shared state in the app.',
+      },
+    ],
   },
   {
     slug: 'mark-bit',
@@ -375,6 +514,20 @@ export const caseStudies: CaseStudy[] = [
         title: 'The folder of references',
         body:
           'Beside the page sits list-of-website.md: a running list of sites kept as references — a music feed, a shoe shop, a Japanese photography portfolio — screenshots and links, saved because something in each one worked. Building the portfolio was really the excuse to look at a lot of other people’s, and keeping the list is the habit that survived: every version of this site since has started the same way.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/markbit-home.jpg',
+        alt: 'The Mark.bit home screen in green on black',
+        caption:
+          'The heading types itself out above the fold while the prompt-line navigation at the bottom edge tracks the section you are reading.',
+      },
+      {
+        src: '/case/markbit-projects.jpg',
+        alt: 'The projects section listing educational work with live demos',
+        caption:
+          'Project cards carried a screenshot, a short note on what was learned and a live demo link — the same shape this portfolio still uses.',
       },
     ],
   },

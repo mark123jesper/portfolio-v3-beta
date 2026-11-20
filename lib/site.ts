@@ -18,7 +18,7 @@ export const socials = [
 
 export const stats = [
   { value: '2 yrs', label: 'in software' },
-  { value: '19', label: 'projects shipped' },
+  { value: '20', label: 'projects shipped' },
   { value: '5', label: 'roles so far' },
 ]
 
@@ -85,6 +85,16 @@ export type Project = {
 }
 
 export const featuredProjects: Project[] = [
+  {
+    title: 'Food Trip',
+    year: '2026',
+    description:
+      'A weekly meal planner built from your filters, one grocery list sorted by aisle, a cook mode for the kitchen, and four ChatGPT features fed by its own 60-recipe library.',
+    tags: ['Next.js', 'TypeScript', 'Supabase', 'OpenAI'],
+    image: '/projects/foodtrip.jpg',
+    live: 'https://food-trip-ai.vercel.app',
+    caseStudy: '/work/food-trip',
+  },
   {
     title: 'Everly Wedding Planner',
     year: '2026',
