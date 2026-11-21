@@ -5,6 +5,8 @@ export const site = {
   location: 'Ontario, Canada',
   email: 'whitecat123dev@gmail.com',
   url: 'https://whitecatdev.vercel.app',
+  /** ISO date of the site's last change — maintained by `npm run lastmod`. */
+  updated: '2026-11-21',
   description:
     'Mark Jesper Pillerva — front-end developer in Ontario, Canada. React, Next.js and Tailwind interfaces built with an engineer’s eye for detail.',
 }

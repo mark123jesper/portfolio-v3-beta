@@ -423,7 +423,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'chainlink',
-    updated: '2026-11-18',
+    updated: '2026-11-21',
     title: 'Chainlink',
     kicker: 'First full-stack build',
     year: '2021',
@@ -449,6 +449,14 @@ export const caseStudies: CaseStudy[] = [
         title: 'Live replies, and the first inbox',
         body:
           'LikeEvent and DeleteReplyEvent implement ShouldBroadcast and go out over Pusher, so a like in one browser lands in another without a refresh, and a database notification feeds an inbox screen. Vue Router with Vuetify and a markdown editor handled the writing side. It is the project where the back end stopped being a mystery: routes, middleware, events and migrations all had to agree before anything worked.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/chainlink-model.jpg',
+        alt: 'A card listing Chainlink’s MySQL tables and its Vue front-end pieces',
+        caption:
+          'No deploy survived, so this is the build from the inside: the tables in database/migrations and the Vue, Vuetify, Pusher and JWT pieces in resources/js.',
       },
     ],
   },

@@ -19,7 +19,7 @@ import re
 import sys
 import urllib.request
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, '.font-cache')
@@ -163,6 +163,103 @@ def render_square(site):
     return card
 
 
+def read_studies():
+    """Pull slug, title, kicker, stack and cover out of lib/case-studies.ts."""
+    source = open(os.path.join(ROOT, 'lib', 'case-studies.ts'), encoding='utf-8').read()
+    starts = list(re.finditer(r"\n {4}slug: '([a-z0-9-]+)',", source))
+    studies = []
+
+    for index, match in enumerate(starts):
+        end = starts[index + 1].start() if index + 1 < len(starts) else len(source)
+        block = source[match.start():end]
+
+        def value(key):
+            found = re.search(rf"{key}:\s*'((?:[^'\\]|\\.)*)'", block, re.S)
+            return found.group(1).replace("\\'", "'") if found else ''
+
+        stack_match = re.search(r'stack:\s*\[([^\]]*)\]', block, re.S)
+        cover_match = re.search(r"cover:\s*\{\s*src:\s*'([^']+)'", block, re.S)
+        studies.append({
+            'slug': match.group(1),
+            'title': value('title'),
+            'kicker': value('kicker'),
+            'stack': re.findall(r"'([^']*)'", stack_match.group(1)) if stack_match else [],
+            'cover': cover_match.group(1) if cover_match else '',
+        })
+
+    return studies
+
+
+def wrap(draw, text, face, width):
+    lines, current = [], ''
+    for word in text.split():
+        trial = f'{current} {word}'.strip()
+        if not current or draw.textlength(trial, font=face) <= width:
+            current = trial
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
+
+
+def fit_block(draw, text, width, max_lines=3, start=58, floor=32, name='fraunces-600'):
+    """Largest size at which the title still wraps inside `max_lines`."""
+    size = start
+    while size > floor:
+        face = font(name, size)
+        lines = wrap(draw, text, face, width)
+        if len(lines) <= max_lines:
+            return face, lines
+        size -= 2
+    face = font(name, floor)
+    return face, wrap(draw, text, face, width)[:max_lines]
+
+
+def render_work_card(site, study):
+    width, height, split, left = 1200, 630, 660, 72
+    card = Image.new('RGB', (width, height), PAPER)
+    draw = ImageDraw.Draw(card)
+
+    draw.rectangle([split, 0, width, height], fill=INK)
+
+    cover_path = os.path.join(ROOT, 'public', study['cover'].lstrip('/'))
+    if study['cover'] and os.path.exists(cover_path):
+        shot = Image.open(cover_path).convert('RGB')
+        tile_w, tile_h = 420, 262
+        tile = ImageOps.fit(shot, (tile_w, tile_h), Image.LANCZOS)
+        x = split + (width - split - tile_w) // 2
+        y = (height - tile_h) // 2 - 18
+        draw.rectangle([x - 5, y - 5, x + tile_w + 5, y + tile_h + 5], fill=(252, 250, 246))
+        card.paste(tile, (x, y))
+        mark = Image.open(MARKS['cream']).resize((42, 42), Image.LANCZOS)
+        card.paste(mark, (x, y + tile_h + 28), mark)
+
+    draw.rectangle([left, 86, left + 26, 89], fill=ACCENT)
+    tracked(draw, left + 40, 76, study['kicker'].upper()[:26], font('rubik', 17, 500), ACCENT, 3.0)
+
+    column = split - left - 64
+    face, title_lines = fit_block(draw, study['title'], column)
+    y = 150
+    for line in title_lines:
+        draw.text((left, y), line, font=face, fill=INK)
+        y += round(face.size * 1.06)
+
+    stack_face = font('rubik', 19, 400)
+    y += 16
+    for line in wrap(draw, ' · '.join(study['stack'][:4]), stack_face, column)[:2]:
+        draw.text((left, y), line, font=stack_face, fill=MUTED)
+        y += 27
+
+    rule_y = height - 132
+    draw.rectangle([left, rule_y, left + 280, rule_y + 1], fill=RULE)
+    draw.text((left, rule_y + 38), site['name'], font=font('rubik', 23, 500), fill=INK)
+    draw.text((left, rule_y + 76), f"{site['domain']}/work/{study['slug']}",
+              font=font('rubik', 17, 400), fill=MUTED)
+    return card
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', default=os.path.join(ROOT, 'public'), help='output directory')
@@ -179,6 +276,22 @@ def main():
         card = build(site)
         card.save(path, 'PNG', optimize=True)
         print(f'{path} {card.size[0]}x{card.size[1]} {os.path.getsize(path) // 1024} KB')
+
+    work_dir = os.path.join(args.out, 'og')
+    os.makedirs(work_dir, exist_ok=True)
+    written = set()
+
+    for study in read_studies():
+        card = render_work_card(site, study)
+        path = os.path.join(work_dir, f"{study['slug']}.png")
+        card.save(path, 'PNG', optimize=True)
+        written.add(os.path.basename(path))
+        print(f'{path} {card.size[0]}x{card.size[1]} {os.path.getsize(path) // 1024} KB')
+
+    for name in sorted(os.listdir(work_dir)):
+        if name.endswith('.png') and name not in written:
+            os.remove(os.path.join(work_dir, name))
+            print(f'removed stale {name}')
 
 
 if __name__ == '__main__':

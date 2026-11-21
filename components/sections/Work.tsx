@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { clientWork, featuredProjects, moreProjects } from '@/lib/site'
+import { sizeOf, webpSrcSet } from '@/lib/images'
 
 export default function Work() {
   return (
@@ -15,10 +16,19 @@ export default function Work() {
                 Things I’ve built, from bootcamp to production.
               </h2>
             </div>
-            <p className="max-w-xs text-sm leading-relaxed text-muted">
-              Personal and client projects — the early ones in plain HTML, the newer ones in React, Next.js and
-              Laravel.
-            </p>
+            <div className="md:text-right">
+              <p className="max-w-xs text-sm leading-relaxed text-muted">
+                Personal and client projects — the early ones in plain HTML, the newer ones in React, Next.js and
+                Laravel.
+              </p>
+              <Link
+                href="/work"
+                className="label link-underline mt-4 inline-flex items-center gap-1.5 text-ink hover:text-accent"
+              >
+                All case studies
+                <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            </div>
           </div>
         </Reveal>
 
@@ -32,14 +42,22 @@ export default function Work() {
                   rel="noreferrer"
                   className="block overflow-hidden rounded-2xl border border-line bg-surface"
                 >
-                  <img
-                    src={project.image}
-                    alt={`${project.title} preview`}
-                    width={1280}
-                    height={800}
-                    loading="lazy"
-                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
-                  />
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcSet={webpSrcSet(project.image)}
+                      sizes="(min-width: 768px) 44vw, 92vw"
+                    />
+                    <img
+                      src={project.image}
+                      alt={`${project.title} preview`}
+                      width={sizeOf(project.image)[0]}
+                      height={sizeOf(project.image)[1]}
+                      loading="lazy"
+                      decoding="async"
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                    />
+                  </picture>
                 </a>
 
                 <div className="mt-5 flex items-start justify-between gap-6">

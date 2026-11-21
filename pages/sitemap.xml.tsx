@@ -7,11 +7,14 @@ const entry = (path: string, changefreq: string, priority: string, lastmod: stri
   `  <url><loc>${site.url}${path}</loc><lastmod>${lastmod}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  // The home page carries every card, so it is as fresh as the newest case study.
-  const homeLastmod = caseStudies.reduce((latest, study) => (study.updated > latest ? study.updated : latest), '')
+  const newestStudy = caseStudies.reduce((latest, study) => (study.updated > latest ? study.updated : latest), '')
+
+  // The home page carries every card, so it is as fresh as the newest case study or the site copy.
+  const homeLastmod = [newestStudy, site.updated].reduce((latest, date) => (date > latest ? date : latest), '')
 
   const urls = [
     entry('/', 'monthly', '1.0', homeLastmod),
+    entry('/work', 'monthly', '0.8', newestStudy),
     ...caseStudies.map((study) => entry(`/work/${study.slug}`, 'yearly', '0.7', study.updated)),
   ]
 

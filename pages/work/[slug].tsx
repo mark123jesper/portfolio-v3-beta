@@ -1,11 +1,15 @@
+import { useState } from 'react'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import JsonLd from '@/components/JsonLd'
+import Lightbox from '@/components/Lightbox'
 import PageHead from '@/components/PageHead'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { caseStudies, getCaseStudy, getNextCaseStudy, type CaseStudy } from '@/lib/case-studies'
+import { sizeOf, webpSrcSet } from '@/lib/images'
 import { site } from '@/lib/site'
 
 type Props = {
@@ -13,17 +17,51 @@ type Props = {
   next: { slug: string; title: string; summary: string }
 }
 
+const personId = `${site.url}/#person`
+
 export default function CaseStudyPage({ study, next }: Props) {
+  const [openShot, setOpenShot] = useState<number | null>(null)
+  const [coverWidth, coverHeight] = sizeOf(study.cover.src)
+
+  const graph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CreativeWork',
+        '@id': `${site.url}/work/${study.slug}#work`,
+        name: study.title,
+        description: study.summary,
+        url: `${site.url}/work/${study.slug}`,
+        image: `${site.url}/og/${study.slug}.png`,
+        dateModified: study.updated,
+        genre: study.kicker,
+        keywords: study.stack.join(', '),
+        author: { '@id': personId, '@type': 'Person', name: site.name, url: site.url },
+        isPartOf: { '@type': 'WebSite', url: site.url, name: `${site.brand} — ${site.name}` },
+        ...(study.live ? { sameAs: [study.live] } : {}),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
+          { '@type': 'ListItem', position: 2, name: 'Case studies', item: `${site.url}/work` },
+          { '@type': 'ListItem', position: 3, name: study.title, item: `${site.url}/work/${study.slug}` },
+        ],
+      },
+    ],
+  }
+
   return (
     <>
       <PageHead
         title={`${study.title} — ${site.name}`}
         description={study.summary}
         path={`/work/${study.slug}`}
-        image={`${site.url}${study.cover.src}`}
-        imageAlt={study.cover.alt}
+        image={`${site.url}/og/${study.slug}.png`}
+        imageAlt={`${study.title} — case study by ${site.name}`}
         type="article"
       />
+      <JsonLd data={graph} />
 
       <a
         href="#case-body"
@@ -38,7 +76,7 @@ export default function CaseStudyPage({ study, next }: Props) {
         <article>
           <header className="shell pb-10 pt-28 md:pt-36">
             <Link
-              href="/#work"
+              href="/work"
               className="label link-underline inline-flex items-center gap-2 text-muted hover:text-accent"
             >
               <span aria-hidden>←</span> All work
@@ -105,13 +143,21 @@ export default function CaseStudyPage({ study, next }: Props) {
 
           <Reveal>
             <div className="shell">
-              <img
-                src={study.cover.src}
-                alt={study.cover.alt}
-                width={1280}
-                height={800}
-                className="w-full rounded-2xl border border-line bg-surface object-cover"
-              />
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={webpSrcSet(study.cover.src)}
+                  sizes="(min-width: 1280px) 1152px, 92vw"
+                />
+                <img
+                  src={study.cover.src}
+                  alt={study.cover.alt}
+                  width={coverWidth}
+                  height={coverHeight}
+                  decoding="async"
+                  className="w-full rounded-2xl border border-line bg-surface object-cover"
+                />
+              </picture>
             </div>
           </Reveal>
 
@@ -142,20 +188,41 @@ export default function CaseStudyPage({ study, next }: Props) {
               </Reveal>
 
               <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-start">
-                {study.shots.map((shot) => (
-                  <Reveal key={shot.src}>
-                    <figure>
-                      <img
-                        src={shot.src}
-                        alt={shot.alt}
-                        loading="lazy"
-                        className="w-full rounded-2xl border border-line bg-surface"
-                      />
-                      <figcaption className="mt-4 text-sm leading-relaxed text-muted">{shot.caption}</figcaption>
-                    </figure>
-                  </Reveal>
-                ))}
+                {study.shots.map((shot, index) => {
+                  const [width, height] = sizeOf(shot.src)
+                  return (
+                    <Reveal key={shot.src}>
+                      <figure>
+                        <button
+                          type="button"
+                          onClick={() => setOpenShot(index)}
+                          aria-label={`Open screenshot: ${shot.alt}`}
+                          className="group block w-full cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                        >
+                          <picture>
+                            <source
+                              type="image/webp"
+                              srcSet={webpSrcSet(shot.src)}
+                              sizes="(min-width: 768px) 44vw, 92vw"
+                            />
+                            <img
+                              src={shot.src}
+                              alt={shot.alt}
+                              width={width}
+                              height={height}
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full rounded-2xl border border-line bg-surface"
+                            />
+                          </picture>
+                        </button>
+                        <figcaption className="mt-4 text-sm leading-relaxed text-muted">{shot.caption}</figcaption>
+                      </figure>
+                    </Reveal>
+                  )
+                })}
               </div>
+              <p className="label mt-10 text-muted">Click any screenshot to view it full size</p>
             </section>
           )}
 
@@ -187,6 +254,10 @@ export default function CaseStudyPage({ study, next }: Props) {
       </main>
 
       <Footer />
+
+      {study.shots && openShot !== null && (
+        <Lightbox shots={study.shots} index={openShot} onClose={() => setOpenShot(null)} onNavigate={setOpenShot} />
+      )}
     </>
   )
 }

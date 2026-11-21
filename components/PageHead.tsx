@@ -7,10 +7,21 @@ type Props = {
   path?: string
   image?: string
   imageAlt?: string
+  imageWidth?: number
+  imageHeight?: number
   type?: 'website' | 'article'
 }
 
-const PageHead = ({ title, description, path = '/', image, imageAlt, type = 'website' }: Props) => {
+const PageHead = ({
+  title,
+  description,
+  path = '/',
+  image,
+  imageAlt,
+  imageWidth = 1200,
+  imageHeight = 630,
+  type = 'website',
+}: Props) => {
   const pageTitle = title ?? `${site.name} — ${site.role}`
   const pageDescription = description ?? site.description
   const pageUrl = `${site.url}${path}`
@@ -47,8 +58,9 @@ const PageHead = ({ title, description, path = '/', image, imageAlt, type = 'web
       <meta property="og:image:alt" content={wideAlt} />
       {image ? (
         <>
-          <meta property="og:image:width" content="1280" />
-          <meta property="og:image:height" content="800" />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content={String(imageWidth)} />
+          <meta property="og:image:height" content={String(imageHeight)} />
         </>
       ) : (
         <>

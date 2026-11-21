@@ -1,0 +1,21 @@
+name: Lighthouse
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit the deployed site
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://whitecatdev.vercel.app/
+            https://whitecatdev.vercel.app/work
+            https://whitecatdev.vercel.app/work/food-trip
+          configPath: ./.github/lighthouse-config.json
+          temporaryPublicStorage: true
