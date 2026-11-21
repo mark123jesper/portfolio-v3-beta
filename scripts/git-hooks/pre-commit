@@ -1,5 +1,5 @@
 #!/bin/sh
 # Blocks a commit when a case study's `updated` date no longer matches git,
 # so the sitemap's <lastmod> values cannot silently drift.
-# Installed into this clone by `npm run hooks:install` (see scripts/install-git-hooks.sh).
+# Installed automatically by `npm install` / `npm ci` (scripts/install-git-hooks.sh).
 exec node "$(git rev-parse --show-toplevel)/scripts/update-lastmod.mjs" --check
