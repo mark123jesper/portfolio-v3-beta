@@ -45,4 +45,5 @@ public/worker-*.js.map
 
 # local dev helper
 /.dev.log
+/.serve.log
 /.font-cache/

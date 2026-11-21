@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { clientWork, featuredProjects, moreProjects } from '@/lib/site'
-import { sizeOf, webpSrcSet } from '@/lib/images'
+import { avifSrcSet, colorOf, sizeOf, webpSrcSet } from '@/lib/images'
 
 export default function Work() {
   return (
@@ -44,6 +44,11 @@ export default function Work() {
                 >
                   <picture>
                     <source
+                      type="image/avif"
+                      srcSet={avifSrcSet(project.image)}
+                      sizes="(min-width: 768px) 44vw, 92vw"
+                    />
+                    <source
                       type="image/webp"
                       srcSet={webpSrcSet(project.image)}
                       sizes="(min-width: 768px) 44vw, 92vw"
@@ -55,6 +60,7 @@ export default function Work() {
                       height={sizeOf(project.image)[1]}
                       loading="lazy"
                       decoding="async"
+                      style={{ backgroundColor: colorOf(project.image) }}
                       className="aspect-[16/10] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
                     />
                   </picture>

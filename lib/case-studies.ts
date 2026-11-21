@@ -19,6 +19,10 @@ export type CaseStudy = {
   source?: string
   sourceNote?: string
   cover: { src: string; alt: string }
+  /** What the build left behind once it shipped. */
+  outcome: string
+  /** The change a second pass would start with. */
+  hindsight: string
   sections: { title: string; body: string }[]
   shots?: CaseShot[]
 }
@@ -26,7 +30,7 @@ export type CaseStudy = {
 export const caseStudies: CaseStudy[] = [
   {
     slug: 'food-trip',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'Food Trip',
     kicker: 'Product build',
     year: '2026',
@@ -38,6 +42,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'food-trip-ai.vercel.app',
     sourceNote: 'The repository is private — happy to walk through the code on request.',
     cover: { src: '/projects/foodtrip.jpg', alt: 'The Food Trip home page' },
+    outcome:
+      'Live at food-trip-ai.vercel.app, with the whole non-AI half usable without an account or a key: preferences, the planner, the derived grocery list and cook mode. The AI routes are quota-limited per account rather than open-ended, so the demo can stay up without an unpredictable bill.',
+    hindsight:
+      'I would build the recipe record and the grocery derivation before the planner screens. Every AI feature leans on ingredient data being clean, and I ended up reshaping the schema after the scale-by-household maths landed. I would also show the pantry subtraction per ingredient line — “why is this not on my list” was the question I kept asking while testing.',
     sections: [
       {
         title: 'A week built from filters, not from scratch',
@@ -82,7 +90,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'everly-wedding-planner',
-    updated: '2026-11-18',
+    updated: '2026-11-21',
     title: 'Everly Wedding Planner',
     kicker: 'Product build',
     year: '2026',
@@ -94,6 +102,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'everly-wedding-planner.vercel.app',
     source: 'https://github.com/mark123jesper/everly-wedding-planner',
     cover: { src: '/projects/everly.jpg', alt: 'The Everly landing page' },
+    outcome:
+      'A capped beta of fifty accounts with a waitlist that takes over when the last one is taken, live at everly-wedding-planner.vercel.app. Budget, replies, seating and the run sheet all resolve against one plan, and a guest can answer for their party without an account.',
+    hindsight:
+      'The eleven tabs each grew their own fields, so the plan document now carries data that only one view reads. A second pass would group the fields by the question they answer and delete the ones nothing reads. I would also cache the assistant brief: assembling it on every message is the expensive part, and it changes far less often than the questions do.',
     sections: [
       {
         title: 'One plan object, eleven views',
@@ -138,7 +150,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'safety-sparkle',
-    updated: '2026-11-18',
+    updated: '2026-11-21',
     title: 'Safety, Sparkle & Green',
     kicker: 'Client build',
     year: '2026',
@@ -150,6 +162,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'ssghouseservices.ca',
     sourceNote: 'The repository is private — happy to walk through the code on request.',
     cover: { src: '/projects/safety-sparkle.jpg', alt: 'The Safety, Sparkle & Green landing page' },
+    outcome:
+      'Live for the client at ssghouseservices.ca and taking real bookings: an estimate from the service catalogue, a confirmation email with an arrival window, and a dashboard that moves a job through its statuses. One identifier — the document id — covers both the database and the customer’s reference.',
+    hindsight:
+      'One admin account held in environment variables suited the size of the job, but it turns adding a second staff member into a redeploy instead of a click. I would put the team in a collection now, keeping the same signed-cookie session. The mail templates also deserve a preview screen, because the confirmation email is the only part of the site a customer keeps.',
     sections: [
       {
         title: 'One page that does three jobs',
@@ -194,7 +210,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'white-cat-v2',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'White Cat Developer v2',
     kicker: 'Site rebuild',
     year: '2023',
@@ -205,6 +221,10 @@ export const caseStudies: CaseStudy[] = [
     live: 'https://mark123jesper-v2.vercel.app',
     liveLabel: 'mark123jesper-v2.vercel.app',
     cover: { src: '/projects/v2.jpg', alt: 'The v2 home screen: teal sidebar and welcome heading' },
+    outcome:
+      'A working single page that stayed live for a couple of years: fixed rail, a palette toggle remembered in localStorage, projects and CV on one screen. It is the version that settled the White Cat Dev name and the cat mark this site still uses.',
+    hindsight:
+      'I would drop the rail on small screens instead of shrinking it, and give every section a real URL rather than an anchor — sending someone a link to the projects should not land them back at the top. The palette should follow prefers-color-scheme first and treat the toggle as an override.',
     sections: [
       {
         title: 'A sidebar instead of a menu bar',
@@ -239,7 +259,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'escuela-de-sto-rosario',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'Escuela de Sto. Rosario',
     kicker: 'School site build',
     year: '2022',
@@ -251,6 +271,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'react-school-web-app.vercel.app',
     source: 'https://github.com/mark123jesper/react-school-web-app',
     cover: { src: '/projects/escuela.jpg', alt: 'The school landing page with enrolment announcements' },
+    outcome:
+      'A live school site at react-school-web-app.vercel.app: public admissions pages, an enquiry and admission funnel writing to Firebase, and a teacher portal reading both lists back in data grids — with no server to maintain and no account needed for a parent.',
+    hindsight:
+      'The student portal’s front-end-only login is the thing I would remove before calling this finished: an admin view over every family’s enquiry needs a server-side check, so both portals would sit behind Auth0 with one role table. I would also move the Firebase reads behind a small API route, so the dashboard stops knowing the database’s shape.',
     sections: [
       {
         title: 'A site with two front doors',
@@ -285,7 +309,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'mern-memories',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'Mern Memories',
     kicker: 'Learning build',
     year: '2022',
@@ -297,6 +321,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'mern-mermories.vercel.app',
     source: 'https://github.com/mark123jesper/mern_mermories',
     cover: { src: '/projects/memories.jpg', alt: 'The memories feed with a create form above it' },
+    outcome:
+      'A complete MERN exercise live at mern-mermories.vercel.app: sign-up, sign-in, create, edit, delete, like and search, with the Express routes, the JWT middleware and the Redux store forming one request path instead of separate tutorials.',
+    hindsight:
+      'Base64 images inside the document were fine for a demo and wrong for anything real — uploads belong in object storage with a URL on the schema. The middleware that guesses the token type from its length is the other shortcut I would replace: name the issuer on the request and verify each kind properly.',
     sections: [
       {
         title: 'One schema, the whole feed',
@@ -331,7 +359,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'digilife-magazine',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'DigiLife Magazine',
     kicker: 'First KodeGo build',
     year: '2021',
@@ -343,6 +371,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'mark123jesper.github.io/digi-life-magazine',
     source: 'https://github.com/mark123jesper/digi-life-magazine',
     cover: { src: '/projects/digilife.jpg', alt: 'The DigiLife Magazine home page' },
+    outcome:
+      'Six section pages and three author pages, live on GitHub Pages, each section with its own stylesheet on top of a shared one and no build step anywhere. It was the first project I shipped end to end, and the first where I added pages nobody asked for because the site felt unfinished without them.',
+    hindsight:
+      'Six hand-copied headers are the lesson. One templating pass — even a static one — would have paid for itself the first time the navigation changed, and the section stylesheets bought less than they cost. I would also design the narrow layout first: the mobile version of each page was an afterthought here.',
     sections: [
       {
         title: 'Six pages, no build step',
@@ -377,7 +409,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'dot-logix',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: '(dot)Logix',
     kicker: 'Group build',
     year: '2021',
@@ -389,6 +421,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'dot-logix.vercel.app',
     source: 'https://github.com/mark123jesper/dot-logix',
     cover: { src: '/projects/dotlogix.jpg', alt: 'The (dot)Logix studio home page' },
+    outcome:
+      'A fictional studio site at dot-logix.vercel.app with a scroll-driven entrance, a proposal panel that slides over the page and twelve SASS partials compiled into one stylesheet — the build where CSS transitions and a single linked file stopped being abstract advice.',
+    hindsight:
+      'Both the loader and the full-screen menu stand between a visitor and the content, and I would not make that trade twice: the loader goes, and the menu keeps a visible close control instead of relying on the same corner button that opened it. I would also compile the SASS in a real pipeline, with source maps, rather than through an editor plugin.',
     sections: [
       {
         title: 'A studio site with a big entrance',
@@ -434,6 +470,10 @@ export const caseStudies: CaseStudy[] = [
     source: 'https://github.com/mark123jesper/laravel-blog',
     sourceNote: 'No live link — the original database and API keys are long gone, so the repository is the record.',
     cover: { src: '/projects/chainlink.jpg', alt: 'The Chainlink forum interface' },
+    outcome:
+      'A working forum — questions, replies, categories, likes and notifications, with replies broadcast over Pusher and a JWT-guarded API. No deployment survived the years, but the migrations and the Vue app are still in the repository and still run locally, which is what this case study is built from.',
+    hindsight:
+      'A JWT in localStorage with a refresh endpoint is the first thing I would change: an httpOnly cookie keeps the token out of anything a script can read. I would also write the API tests before the screens, because the reply and like rules were the parts I broke most while building the interface.',
     sections: [
       {
         title: 'A forum with four tables that matter',
@@ -462,7 +502,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'react-meetups',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'React Meetups',
     kicker: 'Learning build',
     year: '2022',
@@ -474,6 +514,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'react-meetup-rosy.vercel.app',
     source: 'https://github.com/mark123jesper/react-meetup',
     cover: { src: '/projects/meetups.jpg', alt: 'The React Meetups listing page' },
+    outcome:
+      'A small, complete CRUD app live at react-meetup-rosy.vercel.app: list, add, favourite, with Firebase called as a plain REST endpoint and CSS modules per component. It is the project where routing and shared state clicked, in the smallest frame that could hold them.',
+    hindsight:
+      'Favourites that vanish on refresh were the point of the exercise, and also the first thing a visitor tries to keep — I would persist them in localStorage and leave the context as the API in front. Fetching the list on every mount would become one cached request, invalidated by the POST that adds a meetup.',
     sections: [
       {
         title: 'Three routes, one layout',
@@ -508,7 +552,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'mark-bit',
-    updated: '2026-11-20',
+    updated: '2026-11-21',
     title: 'Mark.bit',
     kicker: 'First portfolio',
     year: '2021',
@@ -520,6 +564,10 @@ export const caseStudies: CaseStudy[] = [
     liveLabel: 'mark123jesper-beta.vercel.app',
     source: 'https://github.com/mark123jesper/mark123jesper-v1',
     cover: { src: '/projects/markbit.jpg', alt: 'The Mark.bit home screen in green on black' },
+    outcome:
+      'The first portfolio, still live at mark123jesper-beta.vercel.app: a terminal-green single page with a typewriter heading, scrollspy navigation pinned to the bottom edge and the project-card shape this site still uses. It is where the name, the colour discipline and the habit of keeping references started.',
+    hindsight:
+      'The loader and the typewriter both stand between a visitor and the work. I would keep the typewriter as a flourish and delete the loader. I would also write the project copy as outcomes rather than feature lists — that difference is most of the distance between this version and the current one.',
     sections: [
       {
         title: 'A portfolio that looked like a terminal',
@@ -560,4 +608,10 @@ export const getNextCaseStudy = (slug: string) => {
   const index = caseStudies.findIndex((study) => study.slug === slug)
   if (index === -1) return undefined
   return caseStudies[(index + 1) % caseStudies.length]
+}
+
+export const getPreviousCaseStudy = (slug: string) => {
+  const index = caseStudies.findIndex((study) => study.slug === slug)
+  if (index === -1) return undefined
+  return caseStudies[(index - 1 + caseStudies.length) % caseStudies.length]
 }

@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import type { GetStaticProps } from 'next'
 import Link from 'next/link'
 
@@ -7,7 +8,7 @@ import JsonLd from '@/components/JsonLd'
 import PageHead from '@/components/PageHead'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { caseStudies, type CaseStudy } from '@/lib/case-studies'
-import { sizeOf, webpSrcSet } from '@/lib/images'
+import { avifSrcSet, colorOf, sizeOf, webpSrcSet } from '@/lib/images'
 import { site } from '@/lib/site'
 
 type Props = {
@@ -48,6 +49,24 @@ const graph = {
 }
 
 export default function WorkIndex({ studies }: Props) {
+  const [filter, setFilter] = useState('All')
+
+  // Only stacks shared by more than one study: a chip that matches one page
+  // is a button that does nothing useful.
+  const filters = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const study of studies) {
+      for (const tech of study.stack) counts.set(tech, (counts.get(tech) ?? 0) + 1)
+    }
+    return Array.from(counts.entries())
+      .filter(([, count]) => count > 1)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, 10)
+      .map(([name]) => name)
+  }, [studies])
+
+  const visible = filter === 'All' ? studies : studies.filter((study) => study.stack.includes(filter))
+
   return (
     <>
       <PageHead
@@ -87,11 +106,35 @@ export default function WorkIndex({ studies }: Props) {
               HTML through to an AI meal planner with row-level security.
             </p>
           </div>
+
+          <div role="group" aria-label="Filter case studies by stack" className="mt-10 flex flex-wrap items-center gap-2">
+            {['All', ...filters].map((name) => {
+              const active = filter === name
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setFilter(name)}
+                  aria-pressed={active}
+                  className={`rounded-full border px-3.5 py-1.5 text-[11px] leading-none transition-colors ${
+                    active
+                      ? 'border-ink bg-ink text-paper'
+                      : 'border-line text-muted hover:border-ink/40 hover:text-ink'
+                  }`}
+                >
+                  {name}
+                </button>
+              )
+            })}
+            <p aria-live="polite" className="label ml-auto text-muted">
+              {visible.length} of {studies.length}
+            </p>
+          </div>
         </header>
 
         <section className="shell pb-24">
-          <div className="divide-y divide-line border-t border-line">
-            {studies.map((study, index) => {
+          <div key={filter} className="divide-y divide-line border-t border-line">
+            {visible.map((study, index) => {
               const [width, height] = sizeOf(study.cover.src)
               return (
                 <Reveal key={study.slug}>
@@ -99,6 +142,11 @@ export default function WorkIndex({ studies }: Props) {
                     <div className="md:col-span-5">
                       <Link href={`/work/${study.slug}`} className="group block">
                         <picture>
+                          <source
+                            type="image/avif"
+                            srcSet={avifSrcSet(study.cover.src)}
+                            sizes="(min-width: 768px) 38vw, 92vw"
+                          />
                           <source
                             type="image/webp"
                             srcSet={webpSrcSet(study.cover.src)}
@@ -111,7 +159,8 @@ export default function WorkIndex({ studies }: Props) {
                             height={height}
                             loading={index === 0 ? 'eager' : 'lazy'}
                             decoding="async"
-                            className="w-full rounded-xl border border-line bg-surface transition-transform duration-500 ease-out group-hover:scale-[1.01]"
+                            style={{ backgroundColor: colorOf(study.cover.src) }}
+                            className="w-full rounded-xl border border-line transition-transform duration-500 ease-out group-hover:scale-[1.01]"
                           />
                         </picture>
                       </Link>
@@ -119,7 +168,7 @@ export default function WorkIndex({ studies }: Props) {
 
                     <div className="md:col-span-7">
                       <p className="label text-muted">
-                        {String(index + 1).padStart(2, '0')} · {study.kicker} · {study.year}
+                        {String(studies.indexOf(study) + 1).padStart(2, '0')} · {study.kicker} · {study.year}
                       </p>
                       <h2 className="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
                         <Link href={`/work/${study.slug}`} className="link-underline hover:text-accent">

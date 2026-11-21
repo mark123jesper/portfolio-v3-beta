@@ -8,18 +8,25 @@ import JsonLd from '@/components/JsonLd'
 import Lightbox from '@/components/Lightbox'
 import PageHead from '@/components/PageHead'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
-import { caseStudies, getCaseStudy, getNextCaseStudy, type CaseStudy } from '@/lib/case-studies'
-import { sizeOf, webpSrcSet } from '@/lib/images'
+import {
+  caseStudies,
+  getCaseStudy,
+  getNextCaseStudy,
+  getPreviousCaseStudy,
+  type CaseStudy,
+} from '@/lib/case-studies'
+import { avifSrcSet, colorOf, sizeOf, webpSrcSet } from '@/lib/images'
 import { site } from '@/lib/site'
 
 type Props = {
   study: CaseStudy
   next: { slug: string; title: string; summary: string }
+  previous: { slug: string; title: string }
 }
 
 const personId = `${site.url}/#person`
 
-export default function CaseStudyPage({ study, next }: Props) {
+export default function CaseStudyPage({ study, next, previous }: Props) {
   const [openShot, setOpenShot] = useState<number | null>(null)
   const [coverWidth, coverHeight] = sizeOf(study.cover.src)
 
@@ -145,6 +152,11 @@ export default function CaseStudyPage({ study, next }: Props) {
             <div className="shell">
               <picture>
                 <source
+                  type="image/avif"
+                  srcSet={avifSrcSet(study.cover.src)}
+                  sizes="(min-width: 1280px) 1152px, 92vw"
+                />
+                <source
                   type="image/webp"
                   srcSet={webpSrcSet(study.cover.src)}
                   sizes="(min-width: 1280px) 1152px, 92vw"
@@ -155,7 +167,8 @@ export default function CaseStudyPage({ study, next }: Props) {
                   width={coverWidth}
                   height={coverHeight}
                   decoding="async"
-                  className="w-full rounded-2xl border border-line bg-surface object-cover"
+                  style={{ backgroundColor: colorOf(study.cover.src) }}
+                  className="w-full rounded-2xl border border-line object-cover"
                 />
               </picture>
             </div>
@@ -181,10 +194,29 @@ export default function CaseStudyPage({ study, next }: Props) {
             </div>
           </section>
 
+          <section className="border-y border-line bg-surface/50">
+            <div className="shell py-20 md:py-24">
+              <Reveal>
+                <SectionLabel index="02">What it left behind</SectionLabel>
+              </Reveal>
+
+              <div className="mt-10 grid gap-10 md:grid-cols-2 md:gap-12">
+                <Reveal>
+                  <h2 className="font-display text-2xl leading-snug text-ink">Outcome</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-muted">{study.outcome}</p>
+                </Reveal>
+                <Reveal delay={0.08}>
+                  <h2 className="font-display text-2xl leading-snug text-ink">Another pass</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-muted">{study.hindsight}</p>
+                </Reveal>
+              </div>
+            </div>
+          </section>
+
           {study.shots && study.shots.length > 0 && (
             <section className="shell pb-20 md:pb-28">
               <Reveal>
-                <SectionLabel index="02">Inside the product</SectionLabel>
+                <SectionLabel index="03">Inside the product</SectionLabel>
               </Reveal>
 
               <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-start">
@@ -201,6 +233,11 @@ export default function CaseStudyPage({ study, next }: Props) {
                         >
                           <picture>
                             <source
+                              type="image/avif"
+                              srcSet={avifSrcSet(shot.src)}
+                              sizes="(min-width: 768px) 44vw, 92vw"
+                            />
+                            <source
                               type="image/webp"
                               srcSet={webpSrcSet(shot.src)}
                               sizes="(min-width: 768px) 44vw, 92vw"
@@ -212,7 +249,8 @@ export default function CaseStudyPage({ study, next }: Props) {
                               height={height}
                               loading="lazy"
                               decoding="async"
-                              className="w-full rounded-2xl border border-line bg-surface"
+                              style={{ backgroundColor: colorOf(shot.src) }}
+                              className="w-full rounded-2xl border border-line"
                             />
                           </picture>
                         </button>
@@ -225,6 +263,24 @@ export default function CaseStudyPage({ study, next }: Props) {
               <p className="label mt-10 text-muted">Click any screenshot to view it full size</p>
             </section>
           )}
+
+          <nav
+            aria-label="Case study"
+            className="shell flex flex-col gap-4 border-t border-line py-8 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <Link
+              href={`/work/${previous.slug}`}
+              className="label link-underline inline-flex items-center gap-2 text-muted hover:text-accent"
+            >
+              <span aria-hidden>←</span> {previous.title}
+            </Link>
+            <Link
+              href={`/work/${next.slug}`}
+              className="label link-underline inline-flex items-center gap-2 text-muted hover:text-accent sm:text-right"
+            >
+              {next.title} <span aria-hidden>→</span>
+            </Link>
+          </nav>
 
           <section className="border-y border-line bg-surface/50">
             <div className="shell grid gap-6 py-14 md:grid-cols-12 md:items-center">
@@ -274,11 +330,13 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   if (!study) return { notFound: true }
 
   const next = getNextCaseStudy(slug) ?? study
+  const previous = getPreviousCaseStudy(slug) ?? study
 
   return {
     props: {
       study,
       next: { slug: next.slug, title: next.title, summary: next.summary },
+      previous: { slug: previous.slug, title: previous.title },
     },
   }
 }

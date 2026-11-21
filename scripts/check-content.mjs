@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
  * Guards the hand-edited content: every case study and project card has to
- * point at files that exist, carry alt text and keep its dates honest. Every
- * image the pages render also needs its WebP variants and its entry in
- * `lib/image-sizes.ts`, otherwise the emitted srcset 404s.
+ * point at files that exist, carry alt text, say what it left behind and keep
+ * its dates honest. Every image the pages render also needs its AVIF/WebP
+ * variants and its entry in `lib/image-sizes.ts`, otherwise the emitted srcset
+ * 404s, and every study needs its 1200×630 share card.
  *
  *   npm run check:content
  */
@@ -17,6 +18,11 @@ const read = (file) => readFileSync(join(root, file), 'utf8')
 const errors = []
 const warn = (message) => errors.push(message)
 const publicPath = (src) => join(root, 'public', src.replace(/^\//, ''))
+const pngSize = (file) => {
+  const image = readFileSync(file)
+  if (image.length < 24 || image.toString('hex', 0, 8) !== '89504e470d0a1a0a') return null
+  return [image.readUInt32BE(16), image.readUInt32BE(20)]
+}
 const quoted = (block, key) => block.match(new RegExp(`${key}:\\s*'([^']*)'`))?.[1]
 const list = (block, key) => {
   const raw = block.match(new RegExp(`${key}:\\s*\\[([^\\]]*)\\]`))?.[1] ?? ''
@@ -38,9 +44,11 @@ const checkVariants = (label, src) => {
 
   const widths = width <= 720 ? [width] : [720, width]
   for (const size of widths) {
-    const variant = src.replace(/\.(jpe?g|png)$/i, `-${size}.webp`)
-    if (!existsSync(publicPath(variant))) {
-      warn(`${label}: missing WebP variant public${variant} — run \`npm run images\``)
+    for (const extension of ['avif', 'webp']) {
+      const variant = src.replace(/\.(jpe?g|png)$/i, `-${size}.${extension}`)
+      if (!existsSync(publicPath(variant))) {
+        warn(`${label}: missing ${extension.toUpperCase()} variant public${variant} — run \`npm run images\``)
+      }
     }
   }
 }
@@ -65,6 +73,23 @@ for (const { slug, block } of studyBlocks) {
   const updated = quoted(block, 'updated')
   if (!updated || !/^\d{4}-\d{2}-\d{2}$/.test(updated)) {
     warn(`${slug}: updated must be a YYYY-MM-DD date (found ${updated ?? 'nothing'})`)
+  }
+
+  for (const key of ['outcome', 'hindsight']) {
+    const text = quoted(block, key)
+    if (!text) warn(`${slug}: missing ${key}`)
+    else if (text.length < 80) warn(`${slug}: ${key} is too short to say anything (${text.length} characters)`)
+  }
+
+  const card = join(root, 'public', 'og', `${slug}.png`)
+  if (!existsSync(card)) {
+    warn(`${slug}: share card missing: public/og/${slug}.png — run \`npm run cards\``)
+  } else {
+    const size = pngSize(card)
+    if (!size) warn(`${slug}: share card public/og/${slug}.png is not a PNG`)
+    else if (size[0] !== 1200 || size[1] !== 630) {
+      warn(`${slug}: share card public/og/${slug}.png is ${size[0]}×${size[1]}, expected 1200×630`)
+    }
   }
 
   const cover = block.match(/cover:\s*\{\s*src:\s*'([^']+)',\s*alt:\s*'([^']*)'/s)
