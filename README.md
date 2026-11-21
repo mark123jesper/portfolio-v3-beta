@@ -29,7 +29,7 @@ npm start            # serve the production build
 npm run lint         # eslint
 npm run lastmod      # refresh the sitemap dates from git
 npm run check:content # validate the hand-edited content
-npm run images       # regenerate WebP variants + lib/image-sizes.ts
+npm run images       # WebP variants + lib/image-sizes.ts (after adding a screenshot)
 npm run cards        # rebuild the share cards (needs pip install Pillow)
 npm run indexnow     # ping Bing/Yandex after a deploy (see below)
 ```
@@ -49,6 +49,12 @@ npm run indexnow     # ping Bing/Yandex after a deploy (see below)
 - `public/og/` — one 1200×630 share card per case study, built by `npm run cards`
 - `public/logo-mark-light.png` / `logo-mark-dark.png` — White Cat Dev mark, one per theme
 - `public/og.png` / `og-square.png` — home share cards, 1200×630 and 1200×1200
+
+Adding or replacing a screenshot under `public/projects/` or `public/case/` needs `npm run images` afterwards: it writes the
+720px and full-width WebP files and the matching entry in `lib/image-sizes.ts` that the `<picture>` markup points at. Skipping
+that step leaves a `srcset` aimed at files that do not exist, and the browser shows a broken image instead of the JPEG.
+`npm run check:content` fails on a cover, gallery shot or project card without its manifest entry or variants, so the
+commit is blocked until the step is run.
 
 Content edits happen in `lib/`; no component changes are needed to update copy, add a project or add a case study.
 Adding a case study to `lib/case-studies.ts` adds it to the sitemap, the `/work` index and the share cards.

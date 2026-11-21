@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * Guards the hand-edited content: every case study and project card has to
- * point at files that exist, carry alt text and keep its dates honest.
+ * point at files that exist, carry alt text and keep its dates honest. Every
+ * image the pages render also needs its WebP variants and its entry in
+ * `lib/image-sizes.ts`, otherwise the emitted srcset 404s.
  *
  *   npm run check:content
  */
@@ -19,6 +21,28 @@ const quoted = (block, key) => block.match(new RegExp(`${key}:\\s*'([^']*)'`))?.
 const list = (block, key) => {
   const raw = block.match(new RegExp(`${key}:\\s*\\[([^\\]]*)\\]`))?.[1] ?? ''
   return [...raw.matchAll(/'([^']*)'/g)].map((match) => match[1])
+}
+
+// Mirrors lib/images.ts, so a `srcset` the page can build is a file on disk.
+const imageSizes = {}
+for (const match of read('lib/image-sizes.ts').matchAll(/'([^']+)':\s*\[(\d+),\s*(\d+)\]/g)) {
+  imageSizes[match[1]] = Number(match[2])
+}
+
+const checkVariants = (label, src) => {
+  const width = imageSizes[src]
+  if (!width) {
+    warn(`${label}: no entry in lib/image-sizes.ts for ${src} — run \`npm run images\``)
+    return
+  }
+
+  const widths = width <= 720 ? [width] : [720, width]
+  for (const size of widths) {
+    const variant = src.replace(/\.(jpe?g|png)$/i, `-${size}.webp`)
+    if (!existsSync(publicPath(variant))) {
+      warn(`${label}: missing WebP variant public${variant} — run \`npm run images\``)
+    }
+  }
 }
 
 const studySource = read('lib/case-studies.ts')
@@ -50,6 +74,8 @@ for (const { slug, block } of studyBlocks) {
     warn(`${slug}: cover image missing: public${cover[1]}`)
   } else if (!cover[2].trim()) {
     warn(`${slug}: cover alt is empty`)
+  } else {
+    checkVariants(`${slug}: cover`, cover[1])
   }
 
   if (list(block, 'stack').length === 0) warn(`${slug}: stack is empty`)
@@ -65,6 +91,7 @@ for (const { slug, block } of studyBlocks) {
       const caption = quoted(shot[1], 'caption')
       if (!src) warn(`${slug}: shot without src`)
       else if (!existsSync(publicPath(src))) warn(`${slug}: shot image missing: public${src}`)
+      else checkVariants(`${slug}: shot ${src}`, src)
       if (!alt || !caption) warn(`${slug}: shot ${src ?? '(unknown)'} needs alt and caption`)
     }
   }
@@ -83,6 +110,7 @@ for (const block of projectBlocks) {
   const image = quoted(block, 'image')
   if (!image) warn(`${title}: project card has no image`)
   else if (!existsSync(publicPath(image))) warn(`${title}: card image missing: public${image}`)
+  else checkVariants(`${title}: card image`, image)
 
   const caseSlug = block.match(/caseStudy:\s*'\/work\/([a-z0-9-]+)'/)?.[1]
   if (caseSlug && !seen.has(caseSlug)) warn(`${title}: caseStudy points at unknown study ${caseSlug}`)
