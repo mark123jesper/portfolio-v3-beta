@@ -15,7 +15,7 @@ export const socials = [
   { label: 'GitHub', href: 'https://github.com/mark123jesper', handle: '@mark123jesper' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mark123jesper/', handle: '@mark123jesper' },
   { label: 'X', href: 'https://twitter.com/shironekomaru69', handle: '@shironekomaru69' },
-  { label: 'Facebook', href: 'https://www.facebook.com/mark123jesper', handle: '@mark123jesper' },
+  { label: 'Facebook', href: 'https://www.facebook.com/whitecatdev', handle: '@whitecatdev' },
 ]
 
 export const stats = [
