@@ -24,8 +24,8 @@ const Section = ({
   title: string
   children: ReactNode
 }) => (
-  <section aria-labelledby={id} className="mt-12 border-t border-line pt-8">
-    <div className="grid gap-6 md:grid-cols-[9rem_1fr] md:gap-10">
+  <section aria-labelledby={id} className="mt-12 border-t border-line pt-8 print:mt-5 print:pt-4">
+    <div className="grid gap-6 md:grid-cols-[9rem_1fr] md:gap-10 print:gap-5">
       <h2 id={id} className="label pt-1 text-muted">
         {title}
       </h2>
@@ -47,7 +47,7 @@ export default function Resume() {
         <Nav />
       </div>
 
-      <main className="resume shell max-w-4xl pb-24 pt-28 md:pt-36">
+      <main className="resume shell max-w-4xl pb-24 pt-28 md:pt-36 print:pb-0 print:pt-0">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="label text-accent">Résumé</p>
@@ -67,7 +67,7 @@ export default function Resume() {
           </button>
         </header>
 
-        <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+        <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted print:mt-3">
           {contact.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="link-underline hover:text-accent" rel="noreferrer">
@@ -78,7 +78,7 @@ export default function Resume() {
         </ul>
 
         <Section id="profile" title="Profile">
-          <p className="max-w-2xl text-sm leading-relaxed text-muted">
+          <p className="max-w-2xl text-sm leading-relaxed text-muted print:max-w-none print:text-[12px] print:leading-[1.45]">
             Front-end developer working in React, Next.js and TypeScript, with the back end close behind: Node,
             Laravel, Supabase and MongoDB. Two years in software, first at Fligno on payment products — Finpay,
             Kwikpay and ChangeGPS — then on independent builds: a meal planner on Groq, a wedding planner on Gemini, a
@@ -90,7 +90,7 @@ export default function Resume() {
         </Section>
 
         <Section id="experience" title="Experience">
-          <div className="space-y-8">
+          <div className="space-y-8 print:space-y-4">
             {experience.map((job) => (
               <article key={`${job.company}-${job.period}`} className="resume-entry">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
@@ -100,7 +100,7 @@ export default function Resume() {
                 <p className="mt-1 text-sm text-accent">
                   {job.company} <span className="text-muted">· {job.location}</span>
                 </p>
-                <ul className="mt-3 space-y-1.5">
+                <ul className="mt-3 space-y-1.5 print:mt-2 print:space-y-1">
                   {job.points.map((point) => (
                     <li key={point} className="flex gap-3 text-sm leading-relaxed text-muted">
                       <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent/70" aria-hidden />
@@ -114,7 +114,7 @@ export default function Resume() {
         </Section>
 
         <Section id="selected-work" title="Selected work">
-          <div className="space-y-7">
+          <div className="space-y-7 print:space-y-4">
             {selected.map((project) => (
               <article key={project.title} className="resume-entry">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
@@ -144,7 +144,7 @@ export default function Resume() {
         </Section>
 
         <Section id="skills" title="Skills">
-          <dl className="space-y-4">
+          <dl className="space-y-4 print:space-y-2">
             {skillGroups.map((group) => (
               <div key={group.title} className="grid gap-1 sm:grid-cols-[8rem_1fr] sm:gap-6">
                 <dt className="text-sm text-ink">{group.title}</dt>
@@ -155,7 +155,7 @@ export default function Resume() {
         </Section>
 
         <Section id="education" title="Education">
-          <div className="space-y-5">
+          <div className="space-y-5 print:space-y-3">
             {education.map((item) => (
               <article key={`${item.title}-${item.period}`} className="resume-entry">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
@@ -170,7 +170,7 @@ export default function Resume() {
           </div>
         </Section>
 
-        <p className="mt-12 border-t border-line pt-6 text-xs text-muted">
+        <p className="mt-12 border-t border-line pt-6 text-xs text-muted print:mt-5 print:pt-3">
           References on request · Last updated <time dateTime={site.updated}>{site.updated}</time>
         </p>
       </main>
@@ -183,7 +183,7 @@ export default function Resume() {
         @media print {
           @page {
             size: A4;
-            margin: 14mm;
+            margin: 12mm 14mm;
           }
 
           html,
@@ -201,14 +201,41 @@ export default function Resume() {
           .resume {
             max-width: none !important;
             padding: 0 !important;
+            font-size: 12px;
+            line-height: 1.45;
+          }
+
+          .resume h1 {
+            font-size: 30px;
+          }
+
+          /* 12.5px is about 9.5pt: readable on paper and enough to keep the
+             whole sheet to two pages instead of a third holding one section. */
+          .resume p,
+          .resume li,
+          .resume dd,
+          .resume dt {
+            font-size: 12.5px;
+            line-height: 1.44;
+          }
+
+          .resume h3 {
+            font-size: 13.5px;
+          }
+
+          .resume .label {
+            font-size: 10px;
           }
 
           .resume a {
             text-decoration: none;
           }
 
-          .resume-entry,
-          .resume section {
+          /* An entry stays whole; a section is allowed to flow, so a long run of
+             roles does not push a blank half-page. A break-after: avoid on the
+             headings looks helpful but pushes the whole first section to page 2,
+             leaving the header alone, so it is deliberately absent. */
+          .resume-entry {
             break-inside: avoid;
           }
         }

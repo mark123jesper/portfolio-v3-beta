@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -82,7 +83,7 @@ export default function Nav() {
             </span>
           </a>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-6 md:flex lg:gap-7">
             {sections.map((section) => (
               <a
                 key={section.id}
@@ -94,6 +95,14 @@ export default function Nav() {
                 {section.label}
               </a>
             ))}
+            <Link
+              href="/resume"
+              className={`label link-underline py-1 transition-colors ${
+                pathname === '/resume' ? 'text-accent' : 'text-muted hover:text-ink'
+              }`}
+            >
+              Résumé
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
@@ -138,6 +147,14 @@ export default function Nav() {
                   <span className="label text-muted">0{index + 1}</span>
                 </a>
               ))}
+              <Link
+                href="/resume"
+                onClick={() => setOpen(false)}
+                className="flex items-baseline justify-between border-b border-line py-5"
+              >
+                <span className="font-display text-3xl text-ink">Résumé</span>
+                <span className="label text-muted">06</span>
+              </Link>
               <a href={`mailto:${site.email}`} className="mt-8 text-sm text-accent" onClick={() => setOpen(false)}>
                 {site.email}
               </a>
