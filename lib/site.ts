@@ -6,7 +6,7 @@ export const site = {
   email: 'whitecat123dev@gmail.com',
   url: 'https://whitecatdev.vercel.app',
   /** ISO date of the site's last change — maintained by `npm run lastmod`. */
-  updated: '2026-11-21',
+  updated: '2026-11-22',
   description:
     'Mark Jesper Pillerva — front-end developer in Ontario, Canada. React, Next.js and Tailwind interfaces built with an engineer’s eye for detail.',
 }
@@ -20,7 +20,7 @@ export const socials = [
 
 export const stats = [
   { value: '2 yrs', label: 'in software' },
-  { value: '20', label: 'projects shipped' },
+  { value: '21', label: 'projects shipped' },
   { value: '5', label: 'roles so far' },
 ]
 
@@ -88,11 +88,21 @@ export type Project = {
 
 export const featuredProjects: Project[] = [
   {
+    title: 'LIB — Living in Bible',
+    year: '2026',
+    description:
+      'A daily Bible PWA: all 31,102 verses of the KJV offline, five reading plans, devotionals, prayer and a journal — installable, and usable without an account.',
+    tags: ['Vite', 'React 19', 'TypeScript', 'Supabase'],
+    image: '/projects/lib.jpg',
+    live: 'https://living-in-bible.vercel.app',
+    caseStudy: '/work/living-in-bible',
+  },
+  {
     title: 'Food Trip',
     year: '2026',
     description:
-      'A weekly meal planner built from your filters, one grocery list sorted by aisle, a cook mode for the kitchen, and four ChatGPT features fed by its own 60-recipe library.',
-    tags: ['Next.js', 'TypeScript', 'Supabase', 'OpenAI'],
+      'A weekly meal planner built from your filters, one grocery list sorted by aisle, a cook mode for the kitchen, and four AI features fed by its own 60-recipe library.',
+    tags: ['Next.js', 'TypeScript', 'Supabase', 'Groq'],
     image: '/projects/foodtrip.jpg',
     live: 'https://food-trip-ai.vercel.app',
     caseStudy: '/work/food-trip',
@@ -102,7 +112,7 @@ export const featuredProjects: Project[] = [
     year: '2026',
     description:
       'A free, no-signup wedding dashboard: budget, guest replies, seating, suppliers, checklist, wedding-day run sheet and an assistant that reads the numbers.',
-    tags: ['Next.js', 'TypeScript', 'MongoDB', 'Tailwind CSS'],
+    tags: ['Next.js', 'TypeScript', 'MongoDB', 'Gemini'],
     image: '/projects/everly.jpg',
     live: 'https://everly-wedding-planner.vercel.app',
     source: 'https://github.com/mark123jesper/everly-wedding-planner',

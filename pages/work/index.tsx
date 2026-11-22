@@ -102,8 +102,8 @@ export default function WorkIndex({ studies }: Props) {
               </h1>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted md:col-span-5 md:justify-self-end">
-              {studies.length} builds, oldest to newest by what they forced me to learn — a bootcamp magazine in plain
-              HTML through to an AI meal planner with row-level security.
+              {studies.length} builds, newest first, ordered by what they forced me to learn — a Bible PWA that reads
+              offline back to a bootcamp magazine in plain HTML.
             </p>
           </div>
 

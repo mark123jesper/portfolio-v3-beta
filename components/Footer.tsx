@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { site } from '@/lib/site'
 
@@ -14,6 +15,9 @@ export default function Footer() {
           © {new Date().getFullYear()} {site.name} — {site.brand}
         </p>
         <div className="flex flex-wrap items-center gap-5 text-xs text-muted">
+          <Link href="/resume" className="label link-underline hover:text-accent">
+            Résumé
+          </Link>
           <span>Built with Next.js &amp; Tailwind CSS</span>
           <a href={onHome ? '#top' : '/'} className="label link-underline hover:text-accent">
             Back to top

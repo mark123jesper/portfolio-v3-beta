@@ -2,7 +2,8 @@
 
 Personal portfolio for Mark Jesper Pillerva (White Cat Dev), rebuilt from the v3 beta into a single-page,
 editorial-style site: warm paper palette, serif display type, dark mode and a scroll-driven layout. Every featured
-project has a case study at `/work/<slug>`, indexed at `/work`.
+project has a case study at `/work/<slug>`, indexed at `/work`, and the profile data also renders as a printable
+résumé at `/resume`.
 
 ## Stack
 
@@ -44,6 +45,7 @@ npm run indexnow     # ping Bing/Yandex after a deploy (see below)
 - `components/` — navigation, footer, cursor, theme toggle, page head, lightbox, JSON-LD
 - `pages/work/index.tsx` — index of every case study
 - `pages/work/[slug].tsx` — case-study template, generated from `lib/case-studies.ts` at build time
+- `pages/resume.tsx` — printable résumé built from the same `lib/site.ts` profile data
 - `pages/sitemap.xml.tsx` — sitemap with a `lastmod` per URL
 - `public/projects/` — project screenshots (1280×800, Food Trip 1440×900)
 - `public/case/` — case-study section captures
@@ -79,6 +81,13 @@ plus `check:content`, so a date or a missing image cannot reach a commit.
 `lastmod:check` and `next build`. The git hook catches mistakes locally; this is the copy that catches them on a machine
 where the hook was never installed or was skipped with `--no-verify`. It checks out the full history because the sitemap
 dates are blamed out of git.
+
+## Résumé
+
+`/resume` renders the same profile data as the home page — experience, selected work, skills and education — and
+prints through the browser's own dialog, so the PDF is generated at the moment it is needed rather than committed as
+a stale file. The print stylesheet hides the nav, footer and the print button, forces ink on white for both themes,
+and keeps each entry from breaking across pages.
 
 ## Offline and caching
 

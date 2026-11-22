@@ -15,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const urls = [
     entry('/', 'monthly', '1.0', homeLastmod),
     entry('/work', 'monthly', '0.8', newestStudy),
+    entry('/resume', 'yearly', '0.6', site.updated),
     ...caseStudies.map((study) => entry(`/work/${study.slug}`, 'yearly', '0.7', study.updated)),
   ]
 

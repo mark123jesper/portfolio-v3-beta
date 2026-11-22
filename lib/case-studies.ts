@@ -29,15 +29,86 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
+    slug: 'living-in-bible',
+    updated: '2026-11-22',
+    title: 'LIB — Living in Bible',
+    kicker: 'Product build',
+    year: '2026',
+    role: 'Design, front-end and back-end',
+    summary:
+      'A daily Bible PWA: all 31,102 verses of the King James text bundled for offline reading and search, five reading plans, ten devotionals, prayer, a journal, and a reader that can speak a chapter aloud — usable as a guest, synced once you make an account.',
+    stack: ['Vite', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'Express', 'Supabase'],
+    live: 'https://living-in-bible.vercel.app',
+    liveLabel: 'living-in-bible.vercel.app',
+    sourceNote: 'The repository is private — happy to walk through the code on request.',
+    cover: { src: '/projects/lib.jpg', alt: 'The LIB home screen with the verse of the day and reading streak' },
+    outcome:
+      'Live at living-in-bible.vercel.app and installable from the browser: the reader, search, plans and devotions work as a guest with no account and no network, and a free account adds synced highlights, notes and prayers. Licensed translations sit behind the server, so the key they depend on never reaches the browser.',
+    hindsight:
+      'I would build the licensed-translation cache and its per-IP ceiling before the last two translations, because the forty-requests-an-hour limit is what decides how much of the NIV a visitor can actually read. I would also make the verse action sheet a single component from the start — highlight, note, bookmark, copy and share each reopened the same popover — and design the plans screen around a resumed day rather than a list of plans, which is the state most people come back in.',
+    sections: [
+      {
+        title: 'The whole King James text, offline',
+        body:
+          'The reader gets 66 books and 1,189 chapters from a single bundled JSON file — 31,102 verses, shipped with the app rather than fetched. That one decision is what makes the rest possible: the service worker caches the app shell and the pages you have opened, so a chapter read on the train is still there in a tunnel, and full-text search runs locally instead of against an API. Other public-domain translations — WEB, ASV, BBE, Darby, OEB — are fetched from bible-api.com and cached by the worker, and a failed request falls back to the offline KJV rather than to an error page.',
+      },
+      {
+        title: 'A reader built for one thumb',
+        body:
+          'Every verse is a target: tap it and a sheet offers six highlight colours, a bookmark, a note, copy and share. Text size is adjustable without reflowing the page around it, and a goal verse range can be focused, so a plan reading opens on the passage instead of the whole chapter. The Listen control reads the chapter through the Web Speech API, highlighting each verse as it goes, with previous, next, pause and a speed control. A translation switch sits above the text, and licensed chapters carry the publisher’s copyright line underneath them, as the licence requires.',
+      },
+      {
+        title: 'Plans and devotions that finish',
+        body:
+          'Five plans run from seven days to twenty-one, each with day-by-day passages and a short teaching focus, and progress is saved per plan, so the second day opens where the first left off. Ten original devotionals rotate by day of the year — Scripture, a reflection and a prayer, about four minutes — and the same day-of-year rule picks the verse of the day. A reading streak counts the days in a row something was opened, which is the smallest nudge the app could make and the only one it makes.',
+      },
+      {
+        title: 'Search that understands a reference',
+        body:
+          'Search covers the whole KJV, plus a set of curated topics — anxiety, hope, grief and the like — for when you know the feeling rather than the book. It also parses references: `john 3:16`, `1 cor 13:4-7` and `rom 8` jump straight to the passage, ranges included, so the fastest way into the text is typing what you already know. Everything saved — highlights, bookmarks, notes, journal entries, open and answered prayers with their praise notes — lands in one Library screen instead of five menus.',
+      },
+      {
+        title: 'Guest first, accounts second',
+        body:
+          'Nothing is required to use the app. As a guest, reading, plans, devotions and search work with the library stored in the browser; creating an account moves the same data into Supabase under row-level security scoped to `auth.uid()`. Sign-up sends its own confirmation link through Nodemailer and a Gmail app password rather than leaving that to Supabase, and on a machine without mail configured the link is printed in the API terminal and shown on the verify screen, so the flow stays testable. On Vercel the filesystem is read-only, which is why accounts need Supabase; locally they fall back to a JSON file.',
+      },
+      {
+        title: 'Licensed translations stay on the server',
+        body:
+          'NIV, NKJV and NLT are copyrighted, so they arrive through API.Bible with the key held server-side — the browser only ever calls `/api/bible/versions` and `/api/bible/chapter`. Licensed chapters are cached for seven days as the terms require, uncached requests are capped per IP per hour and answered with a 429 and a retry time past the ceiling, and the deployment can trust a proxy’s forwarded address when it sits behind one. It is the part of the build where the licence, not the layout, set the design.',
+      },
+    ],
+    shots: [
+      {
+        src: '/case/lib-reader.jpg',
+        alt: 'The reader on John 1 with the translation switch, text-size controls and Listen',
+        caption:
+          'A chapter is one column of verse targets. The translation switch, text size and Listen sit above the text, and every verse opens highlight, bookmark, note, copy and share.',
+      },
+      {
+        src: '/case/lib-plans.jpg',
+        alt: 'Five reading plans shown as coloured cards with their lengths',
+        caption:
+          'Five plans from seven to twenty-one days, each with its own teaching focus and progress that resumes on the day it stopped.',
+      },
+      {
+        src: '/case/lib-devotions.jpg',
+        alt: 'The devotions page with today’s devotion and the archive below it',
+        caption:
+          'Ten original devotionals rotate by day of the year — Scripture, a reflection and a prayer — with the archive one scroll below today’s reading.',
+      },
+    ],
+  },
+  {
     slug: 'food-trip',
-    updated: '2026-11-21',
+    updated: '2026-11-22',
     title: 'Food Trip',
     kicker: 'Product build',
     year: '2026',
     role: 'Design, front-end and back-end',
     summary:
-      'A weekly meal planner that takes the deciding out of dinner: a week built from your filters, one grocery list sorted by aisle, a cook mode for the phone on the counter, and four ChatGPT features that only ever work from Food Trip’s own recipe library.',
-    stack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'Supabase', 'OpenAI'],
+      'A weekly meal planner that takes the deciding out of dinner: a week built from your filters, one grocery list sorted by aisle, a cook mode for the phone on the counter, and four AI features on Groq that only ever work from Food Trip’s own recipe library.',
+    stack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'Supabase', 'Groq'],
     live: 'https://food-trip-ai.vercel.app',
     liveLabel: 'food-trip-ai.vercel.app',
     sourceNote: 'The repository is private — happy to walk through the code on request.',
@@ -60,7 +131,7 @@ export const caseStudies: CaseStudy[] = [
       {
         title: 'Four AI features, each with a fence around it',
         body:
-          'ChatGPT does four jobs behind four routes: build a week from the filters, propose three alternatives for one slot, write a recipe from what is in the pantry, and turn a recipe URL into a library entry. Each prompt carries part of Food Trip’s own catalogue, so the model is choosing from real recipes with real ingredient lists instead of inventing dishes that would not survive the grocery page. The guardrails matter more than the prompts: per-account daily call and token limits, a per-feature quota, a twelve-hour response cache, a fallback model when the first is busy, and honest errors — 503 when the key is missing, 429 when a limit is hit. Without a key every non-AI feature still works.',
+          'Groq does four jobs behind four routes: build a week from the filters, propose three alternatives for one slot, write a recipe from what is in the pantry, and turn a recipe URL into a library entry. Cheap work goes to `openai/gpt-oss-20b`, full weeks and URL extraction to `openai/gpt-oss-120b`, and `qwen/qwen3.8-27b` takes over when either is throttled. Each prompt carries part of Food Trip’s own catalogue, so the model is choosing from real recipes with real ingredient lists instead of inventing dishes that would not survive the grocery page. The guardrails matter more than the prompts: per-account daily call and token limits, a per-feature quota, a twelve-hour response cache, a fallback model when the first is busy, and honest errors — 503 when the key is missing, 429 when a limit is hit. Without a key every non-AI feature still works.',
       },
       {
         title: 'Cook mode is a screen, not a printout',
@@ -90,14 +161,14 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'everly-wedding-planner',
-    updated: '2026-11-21',
+    updated: '2026-11-22',
     title: 'Everly Wedding Planner',
     kicker: 'Product build',
     year: '2026',
     role: 'Design, front-end and back-end',
     summary:
       'A wedding planner that keeps the whole wedding in one place — budget, guest replies, seating, suppliers, checklist and the wedding-day run sheet — with an assistant that reads the plan before it answers.',
-    stack: ['Next.js App Router', 'TypeScript', 'MongoDB', 'Tailwind CSS', 'Stripe', 'Turnstile'],
+    stack: ['Next.js App Router', 'TypeScript', 'MongoDB', 'Tailwind CSS 4', 'Gemini', 'Stripe', 'Turnstile'],
     live: 'https://everly-wedding-planner.vercel.app',
     liveLabel: 'everly-wedding-planner.vercel.app',
     source: 'https://github.com/mark123jesper/everly-wedding-planner',
@@ -115,7 +186,7 @@ export const caseStudies: CaseStudy[] = [
       {
         title: 'An assistant that can see the plan',
         body:
-          'The assistant is not a chat window bolted to the side. Before a question is answered, a brief is assembled from the plan — what is committed against the budget, which invitations are still unanswered, what is due next — and that brief is what the model reasons over. The reply talks about this couple’s wedding, using their own numbers, instead of generic planning advice.',
+          'The assistant is not a chat window bolted to the side. Before a question is answered, a brief is assembled from the plan — what is committed against the budget, which invitations are still unanswered, what is due next — and that brief is what Gemini reasons over. A lightweight Gemini model answers first and a Gemma model takes over if it fails, so a spent quota still gets the couple a reply. The reply talks about this couple’s wedding, using their own numbers, instead of generic planning advice.',
       },
       {
         title: 'Guests reply without an account',
