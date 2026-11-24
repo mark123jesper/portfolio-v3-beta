@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useScroll } from 'framer-motion'
 import ThemeToggle from '@/components/ThemeToggle'
 import { site } from '@/lib/site'
 
@@ -17,6 +17,7 @@ const sections = [
 
 export default function Nav() {
   const { pathname } = useRouter()
+  const { scrollYProgress } = useScroll()
   const onHome = pathname === '/'
   const prefix = onHome ? '' : '/'
   const [scrolled, setScrolled] = useState(false)
@@ -124,6 +125,14 @@ export default function Nav() {
             </button>
           </div>
         </nav>
+
+        <motion.div
+          aria-hidden
+          style={{ scaleX: scrollYProgress }}
+          animate={{ opacity: scrolled ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-x-0 bottom-0 h-px origin-left bg-accent/70"
+        />
       </header>
 
       <AnimatePresence>

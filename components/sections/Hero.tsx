@@ -1,6 +1,11 @@
+import dynamic from 'next/dynamic'
 import { Reveal, ArrowUpRight } from '@/components/ui'
+import HeroHeadline from '@/components/sections/HeroHeadline'
 import SocialLinks from '@/components/SocialLinks'
+import StatValue from '@/components/StatValue'
 import { site, stats } from '@/lib/site'
+
+const ProfileStage = dynamic(() => import('@/components/three/ProfileScene'), { ssr: false })
 
 export default function Hero() {
   return (
@@ -20,11 +25,7 @@ export default function Hero() {
               </p>
             </Reveal>
 
-            <Reveal delay={0.08}>
-              <h1 className="mt-6 font-display text-[clamp(2.7rem,7vw,5rem)] font-light leading-[0.94] tracking-[-0.025em] text-ink">
-                Front-end developer with an <em className="italic text-accent">engineer’s</em> eye.
-              </h1>
-            </Reveal>
+            <HeroHeadline />
 
             <Reveal delay={0.16}>
               <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-muted">
@@ -63,21 +64,12 @@ export default function Hero() {
                 className="absolute -inset-3 rounded-[190px_190px_32px_32px] bg-accent/10"
               />
               <div className="relative grid aspect-[4/5] place-items-center overflow-hidden rounded-[170px_170px_24px_24px] border border-line bg-surface">
-                <img
-                  src="/logo-mark-light.png"
-                  alt="White Cat Dev logo"
-                  width={1100}
-                  height={1100}
-                  className="w-[76%] dark:hidden"
-                />
-                <img
-                  src="/logo-mark-dark.png"
-                  alt=""
+                <div
                   aria-hidden
-                  width={1100}
-                  height={1100}
-                  className="hidden w-[76%] dark:block"
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgb(var(--accent)/0.16),transparent_64%)]"
                 />
+                <ProfileStage />
+                <p className="label absolute top-7 left-1/2 -translate-x-1/2 text-muted/80">Move to orbit</p>
               </div>
               <div className="relative -mt-9 mx-4 rounded-2xl border border-line bg-paper px-5 py-4 shadow-[0_24px_50px_-36px_rgba(0,0,0,0.55)] md:mx-6">
                 <p className="font-display text-lg leading-none text-ink">{site.name}</p>
@@ -93,7 +85,9 @@ export default function Hero() {
               {stats.map((stat) => (
                 <div key={stat.label}>
                   <dt className="label text-muted">{stat.label}</dt>
-                  <dd className="mt-2 font-display text-2xl leading-none text-ink">{stat.value}</dd>
+                  <dd className="mt-2 font-display text-2xl leading-none text-ink">
+                    <StatValue value={stat.value} />
+                  </dd>
                 </div>
               ))}
             </dl>
