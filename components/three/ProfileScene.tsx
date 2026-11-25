@@ -3,7 +3,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useReducedMotion } from 'framer-motion'
 import { useTheme } from 'next-themes'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { useViewportActive } from '@/lib/useViewport'
 
@@ -117,13 +117,20 @@ export default function ProfileScene() {
   const reduceMotion = useReducedMotion()
   const palette = resolvedTheme === 'dark' ? PALETTE.dark : PALETTE.light
   const { ref: wrapper, active } = useViewportActive<HTMLDivElement>()
+  // This scene is fill-rate bound, not geometry bound: MSAA plus a 1.75x backing
+  // store cost about half the frame rate in a throttled phone-viewport test, and
+  // a dense display hides the difference. Touch devices get the cheaper buffer;
+  // desktop, where the loop has headroom anyway, keeps antialiasing.
+  const [coarsePointer] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches,
+  )
 
   return (
     <div ref={wrapper} aria-hidden className="absolute inset-0">
       <Canvas
         camera={{ position: [0, 0, 4.6], fov: 38 }}
-        dpr={[1, 1.75]}
-        gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+        dpr={[1, coarsePointer ? 1.25 : 1.75]}
+        gl={{ alpha: true, antialias: !coarsePointer, powerPreference: 'high-performance' }}
         // Idle the GPU when scrolled past or the tab is hidden; a still scene only needs one frame.
         frameloop={active ? (reduceMotion ? 'demand' : 'always') : 'never'}
         style={{ position: 'absolute', inset: 0 }}
