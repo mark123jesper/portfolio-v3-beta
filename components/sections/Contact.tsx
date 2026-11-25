@@ -1,3 +1,4 @@
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel, ArrowUpRight, SocialIcon } from '@/components/ui'
 import { site, socials } from '@/lib/site'
 
@@ -9,9 +10,15 @@ export default function Contact() {
           <div className="md:col-span-7">
             <Reveal>
               <SectionLabel index="05">Contact</SectionLabel>
-              <h2 className="mt-6 font-display text-[clamp(2.3rem,5.2vw,3.9rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink">
-                Let’s build something <em className="italic text-accent">considered</em>.
-              </h2>
+            </Reveal>
+            <TextReveal
+              as="h2"
+              accent={['considered']}
+              className="mt-6 font-display text-[clamp(2.3rem,5.2vw,3.9rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink"
+            >
+              Let’s build something considered.
+            </TextReveal>
+            <Reveal delay={0.06}>
               <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-muted">
                 Open to front-end roles, freelance builds and long conversations about interface detail. Email is the
                 fastest way to reach me.

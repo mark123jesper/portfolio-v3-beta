@@ -1,3 +1,4 @@
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel } from '@/components/ui'
 import { skillGroups } from '@/lib/site'
 
@@ -9,9 +10,14 @@ export default function Skills() {
           <div className="md:col-span-4">
             <Reveal>
               <SectionLabel index="03">Toolkit</SectionLabel>
-              <h2 className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink">
-                The tools I reach for.
-              </h2>
+            </Reveal>
+            <TextReveal
+              as="h2"
+              className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink"
+            >
+              The tools I reach for.
+            </TextReveal>
+            <Reveal delay={0.06}>
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
                 A working toolkit rather than a checklist — everything here has shipped in a project at some point.
               </p>

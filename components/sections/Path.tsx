@@ -1,3 +1,4 @@
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel } from '@/components/ui'
 import { education, experience } from '@/lib/site'
 
@@ -9,10 +10,13 @@ export default function Path() {
           <div className="md:col-span-4">
             <Reveal>
               <SectionLabel index="04">Path</SectionLabel>
-              <h2 className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink">
-                A slightly sideways route into software.
-              </h2>
             </Reveal>
+            <TextReveal
+              as="h2"
+              className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink"
+            >
+              A slightly sideways route into software.
+            </TextReveal>
           </div>
 
           <div className="md:col-span-8">

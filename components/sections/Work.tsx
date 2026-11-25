@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { clientWork, featuredProjects, moreProjects } from '@/lib/site'
 import { avifSrcSet, colorOf, sizeOf, webpSrcSet } from '@/lib/images'
@@ -8,14 +9,19 @@ export default function Work() {
   return (
     <section id="work" className="scroll-mt-24 border-b border-line">
       <div className="shell py-24 md:py-32">
-        <Reveal>
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <Reveal>
               <SectionLabel index="02">Selected work</SectionLabel>
-              <h2 className="mt-6 max-w-2xl font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink">
-                Things I’ve built, from bootcamp to production.
-              </h2>
-            </div>
+            </Reveal>
+            <TextReveal
+              as="h2"
+              className="mt-6 max-w-2xl font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink"
+            >
+              Things I’ve built, from bootcamp to production.
+            </TextReveal>
+          </div>
+          <Reveal delay={0.08}>
             <div className="md:text-right">
               <p className="max-w-xs text-sm leading-relaxed text-muted">
                 Personal and client projects — the early ones in plain HTML, the newer ones in React, Next.js and
@@ -29,8 +35,8 @@ export default function Work() {
                 <ArrowUpRight className="h-3 w-3" />
               </Link>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {featuredProjects.map((project, index) => (

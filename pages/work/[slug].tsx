@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import JsonLd from '@/components/JsonLd'
 import Lightbox from '@/components/Lightbox'
 import PageHead from '@/components/PageHead'
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import {
   caseStudies,
@@ -94,9 +95,12 @@ export default function CaseStudyPage({ study, next, previous }: Props) {
                 <p className="label text-accent">
                   {study.kicker} · {study.year}
                 </p>
-                <h1 className="mt-5 font-display text-[clamp(2.4rem,5.4vw,4rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink">
+                <TextReveal
+                  as="h1"
+                  className="mt-5 font-display text-[clamp(2.4rem,5.4vw,4rem)] font-light leading-[1.02] tracking-[-0.03em] text-ink"
+                >
                   {study.title}
-                </h1>
+                </TextReveal>
                 <p className="mt-6 max-w-xl text-base leading-relaxed text-muted">{study.summary}</p>
               </div>
 

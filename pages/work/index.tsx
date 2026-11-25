@@ -6,6 +6,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import JsonLd from '@/components/JsonLd'
 import PageHead from '@/components/PageHead'
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel, Tag, ArrowUpRight } from '@/components/ui'
 import { caseStudies, type CaseStudy } from '@/lib/case-studies'
 import { avifSrcSet, colorOf, sizeOf, webpSrcSet } from '@/lib/images'
@@ -97,9 +98,12 @@ export default function WorkIndex({ studies }: Props) {
           <div className="mt-8 grid gap-8 md:grid-cols-12 md:items-end">
             <div className="md:col-span-7">
               <p className="label text-accent">Case studies</p>
-              <h1 className="mt-5 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-ink">
+              <TextReveal
+                as="h1"
+                className="mt-5 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-ink"
+              >
                 The longer versions of the work.
-              </h1>
+              </TextReveal>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted md:col-span-5 md:justify-self-end">
               {studies.length} builds, newest first, ordered by what they forced me to learn — a Bible PWA that reads

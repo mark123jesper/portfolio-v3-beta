@@ -1,3 +1,4 @@
+import TextReveal from '@/components/TextReveal'
 import { Reveal, SectionLabel } from '@/components/ui'
 import { facts, site } from '@/lib/site'
 
@@ -8,10 +9,13 @@ export default function About() {
         <div className="md:col-span-4">
           <Reveal>
             <SectionLabel index="01">About</SectionLabel>
-            <h2 className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink">
-              Engineering habits, applied to interfaces.
-            </h2>
           </Reveal>
+          <TextReveal
+            as="h2"
+            className="mt-6 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-light leading-[1.05] tracking-[-0.02em] text-ink"
+          >
+            Engineering habits, applied to interfaces.
+          </TextReveal>
         </div>
 
         <div className="md:col-span-8">
