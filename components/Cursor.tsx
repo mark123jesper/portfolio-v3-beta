@@ -24,6 +24,35 @@ export default function Cursor() {
     let revealed = false
     let frame = 0
 
+    const place = () => {
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`
+    }
+
+    // The ring only follows while the pointer is moving. Once it has caught up
+    // (or the reader stops), the loop ends instead of compositing forever
+    // alongside the hero's WebGL frame loop.
+    const tick = () => {
+      frame = 0
+      const dx = pointerX - ringX
+      const dy = pointerY - ringY
+
+      if (Math.abs(dx) < 0.15 && Math.abs(dy) < 0.15) {
+        ringX = pointerX
+        ringY = pointerY
+        place()
+        return
+      }
+
+      ringX += dx * 0.16
+      ringY += dy * 0.16
+      place()
+      frame = requestAnimationFrame(tick)
+    }
+
+    const follow = () => {
+      if (!frame) frame = requestAnimationFrame(tick)
+    }
+
     const onMove = (event: MouseEvent) => {
       pointerX = event.clientX
       pointerY = event.clientY
@@ -33,6 +62,7 @@ export default function Cursor() {
         revealed = true
         ringX = pointerX
         ringY = pointerY
+        place()
         root.classList.add('cursor-ready')
       }
 
@@ -42,21 +72,15 @@ export default function Cursor() {
         hovering = isInteractive
         ring.dataset.hover = String(hovering)
       }
-    }
 
-    const tick = () => {
-      ringX += (pointerX - ringX) * 0.16
-      ringY += (pointerY - ringY) * 0.16
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`
-      frame = requestAnimationFrame(tick)
+      follow()
     }
 
     window.addEventListener('mousemove', onMove, { passive: true })
-    frame = requestAnimationFrame(tick)
 
     return () => {
       window.removeEventListener('mousemove', onMove)
-      cancelAnimationFrame(frame)
+      if (frame) cancelAnimationFrame(frame)
       root.classList.remove('custom-cursor', 'cursor-ready')
     }
   }, [])

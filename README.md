@@ -50,7 +50,8 @@ npm run indexnow     # ping Bing/Yandex after a deploy (see below)
 - `public/projects/` — project screenshots (1280×800, Food Trip 1440×900)
 - `public/case/` — case-study section captures
 - `public/og/` — one 1200×630 share card per case study, built by `npm run cards`
-- `public/logo-mark-light.png` / `logo-mark-dark.png` — White Cat Dev mark, one per theme
+- `public/logo-mark.svg` — White Cat Dev mark, traced once and used as a colour mask in the nav and the hero fallback
+- `public/logo-mark-light.png` / `logo-mark-dark.png` — the same mark as raster, used only by `npm run cards`
 - `public/og.png` / `og-square.png` — home share cards, 1200×630 and 1200×1200
 
 Adding or replacing a screenshot under `public/projects/` or `public/case/` needs `npm run images` afterwards: it writes

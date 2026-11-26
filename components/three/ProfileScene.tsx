@@ -1,12 +1,13 @@
 'use client'
 
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import { useReducedMotion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { SVGLoader, type SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js'
 import { useViewportActive } from '@/lib/useViewport'
+import BrandMark from '@/components/BrandMark'
 
 /** The traced brand mark in its own units; everything below scales it into the scene. */
 const LOGO_SRC = '/logo-mark.svg'
@@ -43,6 +44,7 @@ function shell(count: number, radius: number) {
  * edge, and the whole thing turns with the scene like the shape it replaced.
  */
 function LogoMark({ accent }: { accent: string }) {
+  const invalidate = useThree((state) => state.invalidate)
   const { paths } = useLoader(SVGLoader, LOGO_SRC) as SVGResult
   const shapes = useMemo(() => paths.flatMap((path) => SVGLoader.createShapes(path)), [paths])
 
@@ -92,6 +94,12 @@ function LogoMark({ accent }: { accent: string }) {
     },
     [geometries, material],
   )
+
+  // The scene paints on demand, so ask for a frame once the shapes arrive and
+  // again when a theme change swaps the material.
+  useEffect(() => {
+    invalidate()
+  }, [geometries, material, invalidate])
 
   return (
     <group position={[-centre.x, -centre.y, -centre.z]}>
@@ -174,6 +182,35 @@ function Sculpture({ accent, ink, reduce }: { accent: string; ink: string; reduc
   )
 }
 
+/**
+ * Paints the scene on demand at roughly 30 frames a second. The mark turns at
+ * about 10° a second, so half the frames look the same while leaving half the
+ * main thread to the page; at 60 fps the hero held ~98% of it.
+ */
+function SceneClock({ active, still, accent }: { active: boolean; still: boolean; accent: string }) {
+  const invalidate = useThree((state) => state.invalidate)
+
+  useEffect(() => {
+    invalidate()
+    if (!active || still) return
+
+    let frame = 0
+    let last = 0
+    const tick = (now: number) => {
+      frame = requestAnimationFrame(tick)
+      if (now - last < 30) return
+      last = now
+      invalidate()
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+    // `accent` is a dependency so a theme change repaints while paused too.
+  }, [active, still, accent, invalidate])
+
+  return null
+}
+
 export default function ProfileScene() {
   const { resolvedTheme } = useTheme()
   const reduceMotion = useReducedMotion()
@@ -193,16 +230,19 @@ export default function ProfileScene() {
         camera={{ position: [0, 0, 4.6], fov: 38 }}
         dpr={[1, coarsePointer ? 1.25 : 1.75]}
         gl={{ alpha: true, antialias: !coarsePointer, powerPreference: 'high-performance' }}
-        // Idle the GPU when scrolled past or the tab is hidden; a still scene only needs one frame.
-        frameloop={active ? (reduceMotion ? 'demand' : 'always') : 'never'}
+        // SceneClock decides when a frame is painted, and idles the GPU when the
+        // scene is scrolled past, the tab is hidden or motion is reduced.
+        frameloop="demand"
         style={{ position: 'absolute', inset: 0 }}
         fallback={
+          // The fallback sits inside <canvas>, so any image it used would be
+          // fetched even when WebGL works; a mask of the vector costs nothing.
           <div className="grid h-full place-items-center">
-            <img src="/logo-mark-light.png" alt="" className="w-1/2 opacity-70 dark:hidden" />
-            <img src="/logo-mark-dark.png" alt="" className="hidden w-1/2 opacity-70 dark:block" />
+            <BrandMark className="h-1/2 w-1/2 text-ink opacity-70" />
           </div>
         }
       >
+        <SceneClock active={active} still={Boolean(reduceMotion)} accent={palette.accent} />
         <Sculpture accent={palette.accent} ink={palette.ink} reduce={Boolean(reduceMotion)} />
       </Canvas>
     </div>

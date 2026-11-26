@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AnimatePresence, motion, useScroll } from 'framer-motion'
+import BrandMark from '@/components/BrandMark'
 import ThemeToggle from '@/components/ThemeToggle'
 import { site } from '@/lib/site'
 
@@ -62,22 +63,7 @@ export default function Nav() {
             aria-label={`${site.name} — back to top`}
             className="group flex items-center gap-3"
           >
-            <img
-              src="/logo-mark-light.png"
-              alt=""
-              aria-hidden
-              width={1100}
-              height={1100}
-              className="h-10 w-10 opacity-80 transition-opacity duration-300 group-hover:opacity-100 dark:hidden"
-            />
-            <img
-              src="/logo-mark-dark.png"
-              alt=""
-              aria-hidden
-              width={1100}
-              height={1100}
-              className="hidden h-10 w-10 opacity-80 transition-opacity duration-300 group-hover:opacity-100 dark:block"
-            />
+            <BrandMark className="h-10 w-10 text-ink opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
             <span className="hidden flex-col leading-none sm:flex">
               <span className="text-[13px] font-medium text-ink">{site.name}</span>
               <span className="mt-1 text-[10px] uppercase tracking-label text-muted">{site.brand}</span>

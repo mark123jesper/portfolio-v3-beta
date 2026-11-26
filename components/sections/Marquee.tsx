@@ -22,7 +22,19 @@ export default function Marquee() {
     const loop = gsap.to(track, { xPercent: -50, duration: 30, ease: 'none', repeat: -1 })
     loop.pause()
     loopRef.current = loop
+
+    // One timer that re-arms itself, rather than a clear/set pair allocated on
+    // every scroll tick just to learn that scrolling is still going on.
     let settle = 0
+    let settleAt = 0
+    const slowDown = () => {
+      settle = 0
+      if (performance.now() < settleAt) {
+        settle = window.setTimeout(slowDown, 60)
+        return
+      }
+      loop.timeScale(1)
+    }
 
     const trigger = ScrollTrigger.create({
       trigger: element,
@@ -31,8 +43,8 @@ export default function Marquee() {
       onUpdate: (self) => {
         // Scrolling speeds the loop up, then it settles back to its idle pace.
         loop.timeScale(gsap.utils.clamp(1, 3.5, 1 + Math.abs(self.getVelocity()) / 900))
-        window.clearTimeout(settle)
-        settle = window.setTimeout(() => loop.timeScale(1), 160)
+        settleAt = performance.now() + 160
+        if (!settle) settle = window.setTimeout(slowDown, 160)
       },
     })
 
