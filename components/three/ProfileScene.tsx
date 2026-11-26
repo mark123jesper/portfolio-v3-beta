@@ -1,11 +1,17 @@
 'use client'
 
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import { useReducedMotion } from 'framer-motion'
 import { useTheme } from 'next-themes'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { SVGLoader, type SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js'
 import { useViewportActive } from '@/lib/useViewport'
+
+/** The traced brand mark in its own units; everything below scales it into the scene. */
+const LOGO_SRC = '/logo-mark.svg'
+const LOGO_UNITS = 1100
+const LOGO_WIDTH = 2.5
 
 const PALETTE = {
   light: { accent: '#a36e2a', ink: '#181512' },
@@ -31,10 +37,74 @@ function shell(count: number, radius: number) {
   return positions
 }
 
+/**
+ * The cat mark traced from /logo-mark.svg and extruded, so it reads as a solid
+ * bronze plate rather than a decal: the strokes become thin walls with a beveled
+ * edge, and the whole thing turns with the scene like the shape it replaced.
+ */
+function LogoMark({ accent }: { accent: string }) {
+  const { paths } = useLoader(SVGLoader, LOGO_SRC) as SVGResult
+  const shapes = useMemo(() => paths.flatMap((path) => SVGLoader.createShapes(path)), [paths])
+
+  const geometries = useMemo(() => {
+    const scale = LOGO_WIDTH / LOGO_UNITS
+    return shapes.map((shape) => {
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 26,
+        bevelEnabled: true,
+        bevelThickness: 5,
+        bevelSize: 1.6,
+        bevelSegments: 2,
+        curveSegments: 6,
+      })
+      geometry.scale(scale, scale, scale)
+      // The traced path is y-down; rotating is a rigid move, so winding stays intact.
+      geometry.rotateX(Math.PI)
+      return geometry
+    })
+  }, [shapes])
+
+  const material = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: accent,
+        roughness: 0.3,
+        metalness: 0.5,
+        emissive: accent,
+        emissiveIntensity: 0.08,
+      }),
+    [accent],
+  )
+
+  const centre = useMemo(() => {
+    const box = new THREE.Box3()
+    geometries.forEach((geometry) => {
+      geometry.computeBoundingBox()
+      if (geometry.boundingBox) box.union(geometry.boundingBox)
+    })
+    return box.getCenter(new THREE.Vector3())
+  }, [geometries])
+
+  useEffect(
+    () => () => {
+      geometries.forEach((geometry) => geometry.dispose())
+      material.dispose()
+    },
+    [geometries, material],
+  )
+
+  return (
+    <group position={[-centre.x, -centre.y, -centre.z]}>
+      {geometries.map((geometry, index) => (
+        <mesh key={index} geometry={geometry} material={material} />
+      ))}
+    </group>
+  )
+}
+
 function Sculpture({ accent, ink, reduce }: { accent: string; ink: string; reduce: boolean }) {
   const group = useRef<THREE.Group>(null)
   const pointer = useRef({ x: 0, y: 0 })
-  const spin = useRef(0)
   const points = useMemo(() => shell(900, 1.55), [])
 
   useEffect(() => {
@@ -49,15 +119,17 @@ function Sculpture({ accent, ink, reduce }: { accent: string; ink: string; reduc
     return () => window.removeEventListener('pointermove', onMove)
   }, [reduce])
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const group3d = group.current
     if (!group3d) return
 
     const step = Math.min(delta, 0.05)
-    if (!reduce) spin.current += step * 0.18
+    // A full turn takes a flat mark edge-on twice a cycle, so it sweeps through
+    // the same slow arc at roughly the turn rate the knot used instead.
+    const turn = reduce ? 0 : Math.sin(state.clock.elapsedTime * 0.35) * 0.5
 
     const targetX = reduce ? 0 : pointer.current.x * 0.55
-    const targetY = spin.current + (reduce ? 0 : pointer.current.y * 0.9)
+    const targetY = turn + (reduce ? 0 : pointer.current.y * 0.9)
     const ease = Math.min(1, step * 2.4)
 
     group3d.rotation.x += (targetX - group3d.rotation.x) * ease
@@ -66,21 +138,11 @@ function Sculpture({ accent, ink, reduce }: { accent: string; ink: string; reduc
 
   return (
     <group ref={group} scale={0.88}>
-      <mesh>
-        <icosahedronGeometry args={[1.2, 1]} />
-        <meshBasicMaterial color={ink} wireframe transparent opacity={0.16} />
-      </mesh>
-
-      <mesh rotation={[0.5, 0.3, 0]}>
-        <torusKnotGeometry args={[0.52, 0.145, 128, 16]} />
-        <meshStandardMaterial
-          color={accent}
-          roughness={0.4}
-          metalness={0.35}
-          emissive={accent}
-          emissiveIntensity={0.12}
-        />
-      </mesh>
+      <group rotation={[0.42, 0.26, 0]}>
+        <Suspense fallback={null}>
+          <LogoMark accent={accent} />
+        </Suspense>
+      </group>
 
       <points>
         <bufferGeometry>
