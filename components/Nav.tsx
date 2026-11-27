@@ -34,6 +34,17 @@ const item: Variants = {
   open: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 }
 
+// Reduced motion: the panel fades in as one block, with no rise and no stagger.
+const stillPanel: Variants = {
+  closed: { opacity: 0, transition: { duration: 0.15 } },
+  open: { opacity: 1, transition: { duration: 0.15 } },
+}
+
+const stillItem: Variants = {
+  closed: { opacity: 0, transition: { duration: 0 } },
+  open: { opacity: 1, transition: { duration: 0.15 } },
+}
+
 export default function Nav() {
   const { pathname } = useRouter()
   const { scrollYProgress } = useScroll()
@@ -151,7 +162,7 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.div
-            variants={panel}
+            variants={reduce ? stillPanel : panel}
             initial="closed"
             animate="open"
             exit="closed"
@@ -159,7 +170,7 @@ export default function Nav() {
           >
             <div className="shell flex flex-col py-8">
               {sections.map((section, index) => (
-                <motion.div key={section.id} variants={item} className="border-b border-line">
+                <motion.div key={section.id} variants={reduce ? stillItem : item} className="border-b border-line">
                   <a
                     href={`${prefix}#${section.id}`}
                     onClick={() => setOpen(false)}
@@ -170,7 +181,7 @@ export default function Nav() {
                   </a>
                 </motion.div>
               ))}
-              <motion.div variants={item} className="border-b border-line">
+              <motion.div variants={reduce ? stillItem : item} className="border-b border-line">
                 <Link
                   href="/resume"
                   onClick={() => setOpen(false)}
@@ -180,7 +191,7 @@ export default function Nav() {
                   <span className="label text-muted">06</span>
                 </Link>
               </motion.div>
-              <motion.div variants={item}>
+              <motion.div variants={reduce ? stillItem : item}>
                 <a href={`mailto:${site.email}`} className="mt-8 inline-block text-sm text-accent" onClick={() => setOpen(false)}>
                   {site.email}
                 </a>
