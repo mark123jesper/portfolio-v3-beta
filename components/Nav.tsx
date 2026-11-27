@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { AnimatePresence, motion, useScroll } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion, useScroll, type Variants } from 'framer-motion'
 import BrandMark from '@/components/BrandMark'
 import ThemeToggle from '@/components/ThemeToggle'
 import { site } from '@/lib/site'
@@ -16,9 +16,28 @@ const sections = [
   { id: 'contact', label: 'Contact' },
 ]
 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+const panel: Variants = {
+  closed: {
+    opacity: 0,
+    transition: { duration: 0.2, when: 'afterChildren', staggerChildren: 0.03, staggerDirection: -1 },
+  },
+  open: {
+    opacity: 1,
+    transition: { duration: 0.2, delayChildren: 0.04, staggerChildren: 0.05 },
+  },
+}
+
+const item: Variants = {
+  closed: { opacity: 0, y: 18, transition: { duration: 0.2, ease: 'easeIn' } },
+  open: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+}
+
 export default function Nav() {
   const { pathname } = useRouter()
   const { scrollYProgress } = useScroll()
+  const reduce = useReducedMotion()
   const onHome = pathname === '/'
   const prefix = onHome ? '' : '/'
   const [scrolled, setScrolled] = useState(false)
@@ -94,21 +113,29 @@ export default function Nav() {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <button
+            <motion.button
               type="button"
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
               aria-label={open ? 'Close menu' : 'Open menu'}
-              className="grid h-9 w-9 place-items-center rounded-full border border-line text-ink md:hidden"
+              whileTap={reduce ? undefined : { scale: 0.9 }}
+              className="grid h-9 w-9 place-items-center rounded-full border border-line text-ink transition-colors hover:border-accent hover:text-accent md:hidden"
             >
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-4 w-4">
-                {open ? (
-                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                ) : (
-                  <path d="M4 8h16M4 16h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                )}
-              </svg>
-            </button>
+              <span aria-hidden className="flex h-4 w-4 flex-col items-center justify-center gap-[7px]">
+                <motion.span
+                  className="block h-[1.5px] w-4 rounded-full bg-current"
+                  initial={false}
+                  animate={open ? { y: 4.25, rotate: 45 } : { y: 0, rotate: 0 }}
+                  transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 460, damping: 32 }}
+                />
+                <motion.span
+                  className="block h-[1.5px] w-4 rounded-full bg-current"
+                  initial={false}
+                  animate={open ? { y: -4.25, rotate: -45 } : { y: 0, rotate: 0 }}
+                  transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 460, damping: 32 }}
+                />
+              </span>
+            </motion.button>
           </div>
         </nav>
 
@@ -124,35 +151,40 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            variants={panel}
+            initial="closed"
+            animate="open"
+            exit="closed"
             className="fixed inset-0 z-30 bg-paper pt-16 md:hidden"
           >
             <div className="shell flex flex-col py-8">
               {sections.map((section, index) => (
-                <a
-                  key={section.id}
-                  href={`${prefix}#${section.id}`}
-                  onClick={() => setOpen(false)}
-                  className="flex items-baseline justify-between border-b border-line py-5"
-                >
-                  <span className="font-display text-3xl text-ink">{section.label}</span>
-                  <span className="label text-muted">0{index + 1}</span>
-                </a>
+                <motion.div key={section.id} variants={item} className="border-b border-line">
+                  <a
+                    href={`${prefix}#${section.id}`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-baseline justify-between py-5"
+                  >
+                    <span className="font-display text-3xl text-ink">{section.label}</span>
+                    <span className="label text-muted">0{index + 1}</span>
+                  </a>
+                </motion.div>
               ))}
-              <Link
-                href="/resume"
-                onClick={() => setOpen(false)}
-                className="flex items-baseline justify-between border-b border-line py-5"
-              >
-                <span className="font-display text-3xl text-ink">Résumé</span>
-                <span className="label text-muted">06</span>
-              </Link>
-              <a href={`mailto:${site.email}`} className="mt-8 text-sm text-accent" onClick={() => setOpen(false)}>
-                {site.email}
-              </a>
+              <motion.div variants={item} className="border-b border-line">
+                <Link
+                  href="/resume"
+                  onClick={() => setOpen(false)}
+                  className="flex items-baseline justify-between py-5"
+                >
+                  <span className="font-display text-3xl text-ink">Résumé</span>
+                  <span className="label text-muted">06</span>
+                </Link>
+              </motion.div>
+              <motion.div variants={item}>
+                <a href={`mailto:${site.email}`} className="mt-8 inline-block text-sm text-accent" onClick={() => setOpen(false)}>
+                  {site.email}
+                </a>
+              </motion.div>
             </div>
           </motion.div>
         )}
